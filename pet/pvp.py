@@ -636,6 +636,26 @@ class BusinessStatussPVP(PVP):
     def verbalize(self, label) -> List[str]:
         return BusinessStatussPVP.VERBALIZER[label]
 
+
+class CausesPVP(PVP):
+    VERBALIZER = {
+        "0": ["no"],
+        "1": ["yes"]
+    }
+
+    def get_parts(self, example: InputExample) -> FilledPattern:
+        text = self.shortenable(example.text_a)
+
+        if self.pattern_id == 0:
+            return [text,' describes a cause?', self.mask], []
+        else:
+            raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
+
+    def verbalize(self, label) -> List[str]:
+        return CausesPVP.VERBALIZER[label]
+
+
+
 PVPS = {
     'agnews': AgnewsPVP,
     'mnli': MnliPVP,
@@ -655,5 +675,6 @@ PVPS = {
     'record': RecordPVP,
     'ax-b': RtePVP,
     'ax-g': RtePVP,
-    'b-status' : BusinessStatussPVP
+    'b-status' : BusinessStatussPVP,
+    'causes' : CausesPVP
 }

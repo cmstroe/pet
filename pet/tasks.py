@@ -797,6 +797,40 @@ class BusinessStatusClassificationProcessor(DataProcessor):
 
         return examples
 
+class CausesProcessor(DataProcessor):
+    """Processor for the business status binary classification set."""
+
+    def get_train_examples(self, data_dir):
+        return self._create_examples(os.path.join(data_dir, "train_causes.csv"), "train")
+
+    def get_dev_examples(self, data_dir):
+        return self._create_examples(os.path.join(data_dir, "test_causes.csv"), "dev")
+
+    def get_test_examples(self, data_dir) -> List[InputExample]:
+        raise NotImplementedError()
+
+    def get_unlabeled_examples(self, data_dir) -> List[InputExample]:
+        return self.get_train_examples(data_dir)
+
+    def get_labels(self):
+        return ["0", "1"]
+
+    @staticmethod
+    def _create_examples(path: str, set_type: str) -> List[InputExample]:
+        examples = []
+
+        with open(path) as f:
+            reader = csv.reader(f, delimiter=',')
+            for idx, row in enumerate(reader):
+                label, body = row
+                guid = "%s-%s" % (set_type, idx)
+                text_a = body.replace('\\n', ' ').replace('\\', ' ')
+
+                example = InputExample(guid=guid, text_a=text_a, label=label)
+                examples.append(example)
+
+        return examples
+
 PROCESSORS = {
     "mnli": MnliProcessor,
     "mnli-mm": MnliMismatchedProcessor,
@@ -817,7 +851,8 @@ PROCESSORS = {
     "record": RecordProcessor,
     "ax-g": AxGProcessor,
     "ax-b": AxBProcessor,
-    "b-status" : BusinessStatusClassificationProcessor
+    "b-status" : BusinessStatusClassificationProcessor,
+    "causes" : CausesProcessor
 }  # type: Dict[str,Callable[[],DataProcessor]]
 
 TASK_HELPERS = {
