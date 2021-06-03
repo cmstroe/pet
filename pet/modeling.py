@@ -24,7 +24,7 @@ import torch
 from sklearn.metrics import f1_score
 from transformers.data.metrics import simple_accuracy
 
-import pet.log as log
+import log 
 from pet.utils import InputExample, exact_match, save_logits, save_predictions, softmax, LogitsList, set_seed, eq_div
 from pet.wrapper import TransformerModelWrapper, SEQUENCE_CLASSIFIER_WRAPPER, WrapperConfig
 
