@@ -801,7 +801,7 @@ class CausesProcessor(DataProcessor):
     """Processor for the business status binary classification set."""
 
     def get_train_examples(self, data_dir):
-        return self._create_examples(os.path.join(data_dir, "train_causes.csv"), "train")
+        return self._create_examples(os.path.join(data_dir, "train2.csv"), "train")
 
     def get_dev_examples(self, data_dir):
         return self._create_examples(os.path.join(data_dir, "test_causes.csv"), "dev")
@@ -810,7 +810,8 @@ class CausesProcessor(DataProcessor):
         raise NotImplementedError()
 
     def get_unlabeled_examples(self, data_dir) -> List[InputExample]:
-        return self.get_train_examples(data_dir)
+         return self._create_examples(os.path.join(data_dir, "unlabeled.csv"), "unlabeled")
+
 
     def get_labels(self):
         return ["0", "1"]
