@@ -1,7 +1,7 @@
 -f https://download.pytorch.org/whl/torch_stable.html
 numpy==1.16.6
 jsonpickle==1.1
-scikit-learn==0.23.1
+scikit-learn==0.20.4
 torch===1.5.0
 torchvision==0.6.0
 transformers==3.0.2
