@@ -41,6 +41,11 @@ class PetConfig(ABC):
         """Save this config to a file."""
         with open(path, 'w', encoding='utf8') as fh:
             json.dump(self.__dict__, fh)
+    def new_model(self):
+        try:
+            PetConfig
+        except ValueError:
+            print("Invalid Model config") 
 
     @classmethod
     def load(cls, path: str):
