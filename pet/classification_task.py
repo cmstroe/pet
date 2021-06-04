@@ -34,10 +34,10 @@ class MarketClassificationDataProcessor(DataProcessor):
     TASK_NAME = "b-status"
 
     # Set this to the name of the file containing the train examples
-    TRAIN_FILE_NAME = "train.csv"
+    TRAIN_FILE_NAME = "train_causes.csv"
 
     # Set this to the name of the file containing the dev examples
-    DEV_FILE_NAME = "dev.csv"
+    DEV_FILE_NAME = "test_causes.csv"
 
     # Set this to the name of the file containing the test examples
     TEST_FILE_NAME = "test.csv"
@@ -60,7 +60,7 @@ class MarketClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the training data can be found
         :return: a list of train examples
         """
-        return self._create_examples(os.path.join(data_dir, MarketClassificationDataProcessor.TRAIN_FILE_NAME), "train")
+        return self._create_examples(os.path.join(data_dir, "train_causes.csv"), "train")
 
     def get_dev_examples(self, data_dir: str) -> List[InputExample]:
         """
@@ -68,15 +68,15 @@ class MarketClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the dev data can be found
         :return: a list of dev examples
         """
-        return self._create_examples(os.path.join(data_dir, MarketClassificationDataProcessor.DEV_FILE_NAME), "dev")
-
+        return self._create_examples(os.path.join(data_dir, "test_causes.csv"), "dev")
+    
     def get_test_examples(self, data_dir) -> List[InputExample]:
         """
         This method loads test examples from a file with name `TEST_FILE_NAME` in the given directory.
         :param data_dir: the directory in which the test data can be found
         :return: a list of test examples
         """
-        return self._create_examples(os.path.join(data_dir, MarketClassificationDataProcessor.TEST_FILE_NAME), "test")
+        raise NotImplementedError()
 
     def get_unlabeled_examples(self, data_dir) -> List[InputExample]:
         """
@@ -84,28 +84,26 @@ class MarketClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the unlabeled data can be found
         :return: a list of unlabeled examples
         """
-        return self._create_examples(os.path.join(data_dir, MarketClassificationDataProcessor.UNLABELED_FILE_NAME), "unlabeled")
+        return self._create_examples(os.path.join(data_dir, "unlabeled.csv"), "unlabeled")
 
     def get_labels(self) -> List[str]:
         """This method returns all possible labels for the task."""
         return MarketClassificationDataProcessor.LABELS
 
-    def _create_examples(self, path, set_type, max_examples=-1, skip_first=0):
-        """Creates examples for the training and dev sets."""
+    def _create_examples(path: str, set_type: str) -> List[InputExample]:
         examples = []
 
         with open(path) as f:
             reader = csv.reader(f, delimiter=',')
             for idx, row in enumerate(reader):
+                label, body = row
                 guid = "%s-%s" % (set_type, idx)
-                label = row[MarketClassificationDataProcessor.LABEL_COLUMN]
-                text_a = row[MarketClassificationDataProcessor.TEXT_A_COLUMN]
+                text_a = body.replace('\\n', ' ').replace('\\', ' ')
 
                 example = InputExample(guid=guid, text_a=text_a, label=label)
                 examples.append(example)
 
         return examples
-
 
 # register the processor for this task with its name
 PROCESSORS[MarketClassificationDataProcessor.TASK_NAME] = MarketClassificationDataProcessor
