@@ -60,7 +60,7 @@ class MarketClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the training data can be found
         :return: a list of train examples
         """
-        return self._create_examples(os.path.join(data_dir, "train_causes.csv"), "train")
+        return self._create_examples(os.path.join(data_dir,  MarketClassificationDataProcessor.TRAIN_FILE_NAME), "train")
 
     def get_dev_examples(self, data_dir: str) -> List[InputExample]:
         """
@@ -68,7 +68,7 @@ class MarketClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the dev data can be found
         :return: a list of dev examples
         """
-        return self._create_examples(os.path.join(data_dir, "test_causes.csv"), "dev")
+        return self._create_examples(os.path.join(data_dir, MarketClassificationDataProcessor.DEV_FILE_NAME), "dev")
     
     def get_test_examples(self, data_dir) -> List[InputExample]:
         """
@@ -84,7 +84,7 @@ class MarketClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the unlabeled data can be found
         :return: a list of unlabeled examples
         """
-        return self._create_examples(os.path.join(data_dir, "unlabeled.csv"), "unlabeled")
+        return self._create_examples(os.path.join(data_dir, MarketClassificationDataProcessor.UNLABELED_FILE_NAME), "unlabeled")
 
     def get_labels(self) -> List[str]:
         """This method returns all possible labels for the task."""
