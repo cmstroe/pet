@@ -31,7 +31,7 @@ class MarketClassificationDataProcessor(DataProcessor):
     """
 
     # Set this to the name of the task
-    TASK_NAME = "b-status"
+    TASK_NAME = "causes"
 
     # Set this to the name of the file containing the train examples
     TRAIN_FILE_NAME = "train_causes.csv"
