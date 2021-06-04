@@ -77,6 +77,8 @@ def main():
                         help="The input data dir. Should contain the data files for the task.")
     parser.add_argument("--model_type", default=None, type=str, required=True, choices=MODEL_CLASSES.keys(),
                         help="The type of the pretrained language model to use")
+    parser.add_argument("--pattern_ids", default=[0], type=int, nargs='+',
+                        help="The ids of the PVPs to be used (only for PET)")
     parser.add_argument("--model_name_or_path", default=None, type=str, required=True,
                         help="Path to the pre-trained model or shortcut name")
     parser.add_argument("--task_name", default=None, type=str, required=True, choices=PROCESSORS.keys(),
