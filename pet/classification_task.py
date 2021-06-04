@@ -60,7 +60,8 @@ class MarketClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the training data can be found
         :return: a list of train examples
         """
-        return self._create_examples(os.path.join(data_dir,  MarketClassificationDataProcessor.TRAIN_FILE_NAME), "train")
+        x = os.path.join(data_dir,  MarketClassificationDataProcessor.TRAIN_FILE_NAME)
+        return self._create_examples(x, "train")
 
     def get_dev_examples(self, data_dir: str) -> List[InputExample]:
         """
