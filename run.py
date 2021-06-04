@@ -88,6 +88,34 @@ def main():
 
     # Other optional parameters
   
+    parser.add_argument("--train_examples", default=-1, type=int,
+                        help="The total number of train examples to use, where -1 equals all examples.")
+    parser.add_argument("--test_examples", default=-1, type=int,
+                        help="The total number of test examples to use, where -1 equals all examples.")
+    parser.add_argument("--unlabeled_examples", default=-1, type=int,
+                        help="The total number of unlabeled examples to use, where -1 equals all examples")
+    parser.add_argument("--split_examples_evenly", action='store_true',
+                        help="If true, train examples are not chosen randomly, but split evenly across all labels.")
+    parser.add_argument("--cache_dir", default="", type=str,
+                        help="Where to store the pre-trained models downloaded from S3.")
+    parser.add_argument("--learning_rate", default=1e-5, type=float,
+                        help="The initial learning rate for Adam.")
+    parser.add_argument("--weight_decay", default=0.01, type=float,
+                        help="Weight decay if we apply some.")
+    parser.add_argument("--adam_epsilon", default=1e-8, type=float,
+                        help="Epsilon for Adam optimizer.")
+    parser.add_argument("--max_grad_norm", default=1.0, type=float,
+                        help="Max gradient norm.")
+    parser.add_argument("--warmup_steps", default=0, type=int,
+                        help="Linear warmup over warmup_steps.")
+    parser.add_argument('--logging_steps', type=int, default=50,
+                        help="Log every X updates steps.")
+    parser.add_argument("--no_cuda", action='store_true',
+                        help="Avoid using CUDA when available")
+    parser.add_argument('--overwrite_output_dir', action='store_true',
+                        help="Overwrite the content of the output directory")
+    parser.add_argument('--seed', type=int, default=42,
+                        help="random seed for initialization")
     parser.add_argument('--do_train', action='store_true',
                         help="Whether to perform training")
     parser.add_argument('--do_eval', action='store_true',
