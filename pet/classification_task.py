@@ -68,7 +68,9 @@ class MarketClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the dev data can be found
         :return: a list of dev examples
         """
-        return self._create_examples(os.path.join(data_dir, MarketClassificationDataProcessor.DEV_FILE_NAME), "dev")
+        x  = os.path.join(data_dir, MarketClassificationDataProcessor.DEV_FILE_NAME)
+        print(x)
+        return self._create_examples( x, "dev")
     
     def get_test_examples(self, data_dir) -> List[InputExample]:
         """
