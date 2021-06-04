@@ -1,7 +1,11 @@
-
+from numpy import mean
+from numpy import std
 import argparse
 import os
 from typing import Tuple
+from sklearn.model_selection import KFold
+from sklearn.model_selection import RepeatedKFold
+from sklearn.model_selection import cross_val_score
 
 import torch
 from pet.classification_pvp import BusinessStatussPVP
@@ -64,6 +68,7 @@ def load_sequence_classifier_configs(args) -> Tuple[WrapperConfig, pet.TrainConf
 
 def main():
     parser = argparse.ArgumentParser(description="Command line interface for PET/iPET")
+    kf5 = KFold(n_splits=5, shuffle=False)
 
     # Required parameters
     parser.add_argument("--method", required=True, choices=['pet', 'ipet', 'sequence_classifier'],
@@ -78,46 +83,6 @@ def main():
                         help="The name of the task to train/evaluate on")
     parser.add_argument("--output_dir", default=None, type=str, required=True,
                         help="The output directory where the model predictions and checkpoints will be written")
-
-    # PET-specific optional parameters
-    parser.add_argument("--wrapper_type", default="mlm", choices=WRAPPER_TYPES,
-                        help="The wrapper type. Set this to 'mlm' for a masked language model like BERT or to 'plm' "
-                             "for a permuted language model like XLNet (only for PET)")
-    parser.add_argument("--pattern_ids", default=[0], type=int, nargs='+',
-                        help="The ids of the PVPs to be used (only for PET)")
-    parser.add_argument("--lm_training", action='store_true',
-                        help="Whether to use language modeling as auxiliary task (only for PET)")
-    parser.add_argument("--alpha", default=0.9999, type=float,
-                        help="Weighting term for the auxiliary language modeling task (only for PET)")
-    parser.add_argument("--temperature", default=2, type=float,
-                        help="Temperature used for combining PVPs (only for PET)")
-    parser.add_argument("--verbalizer_file", default=None,
-                        help="The path to a file to override default verbalizers (only for PET)")
-    parser.add_argument("--reduction", default='wmean', choices=['wmean', 'mean'],
-                        help="Reduction strategy for merging predictions from multiple PET models. Select either "
-                             "uniform weighting (mean) or weighting based on train set accuracy (wmean)")
-    parser.add_argument("--decoding_strategy", default='default', choices=['default', 'ltr', 'parallel'],
-                        help="The decoding strategy for PET with multiple masks (only for PET)")
-    parser.add_argument("--no_distillation", action='store_true',
-                        help="If set to true, no distillation is performed (only for PET)")
-    parser.add_argument("--pet_repetitions", default=3, type=int,
-                        help="The number of times to repeat PET training and testing with different seeds.")
-    parser.add_argument("--pet_max_seq_length", default=256, type=int,
-                        help="The maximum total input sequence length after tokenization for PET. Sequences longer "
-                             "than this will be truncated, sequences shorter will be padded.")
-    parser.add_argument("--pet_per_gpu_train_batch_size", default=4, type=int,
-                        help="Batch size per GPU/CPU for PET training.")
-    parser.add_argument("--pet_per_gpu_eval_batch_size", default=8, type=int,
-                        help="Batch size per GPU/CPU for PET evaluation.")
-    parser.add_argument("--pet_per_gpu_unlabeled_batch_size", default=4, type=int,
-                        help="Batch size per GPU/CPU for auxiliary language modeling examples in PET.")
-    parser.add_argument('--pet_gradient_accumulation_steps', type=int, default=1,
-                        help="Number of updates steps to accumulate before performing a backward/update pass in PET.")
-    parser.add_argument("--pet_num_train_epochs", default=3, type=float,
-                        help="Total number of training epochs to perform in PET.")
-    parser.add_argument("--pet_max_steps", default=-1, type=int,
-                        help="If > 0: set total number of training steps to perform in PET. Override num_train_epochs.")
-
 
     # Other optional parameters
   
@@ -147,6 +112,7 @@ def main():
         raise ValueError("Task '{}' not found".format(args.task_name))
     processor = PROCESSORS[args.task_name]()
     args.label_list = processor.get_labels()
+    cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
 
     train_ex_per_label, test_ex_per_label = None, None
     train_ex, test_ex = args.train_examples, args.test_examples
@@ -170,13 +136,15 @@ def main():
     sc_model_cfg, sc_train_cfg, sc_eval_cfg = load_sequence_classifier_configs(args)
 
     if args.method == 'pet':
-        pet.train_pet(pet_model_cfg, pet_train_cfg, pet_eval_cfg, sc_model_cfg, sc_train_cfg, sc_eval_cfg,
+        model  = pet.train_pet(pet_model_cfg, pet_train_cfg, pet_eval_cfg, sc_model_cfg, sc_train_cfg, sc_eval_cfg,
                       pattern_ids=args.pattern_ids, output_dir=args.output_dir,
                       ensemble_repetitions=args.pet_repetitions, final_repetitions=args.sc_repetitions,
                       reduction=args.reduction, train_data=train_data, unlabeled_data=unlabeled_data,
                       eval_data=eval_data, do_train=args.do_train, do_eval=args.do_eval,
                       no_distillation=args.no_distillation, seed=args.seed)
-
+        scores = cross_val_score(model, train_data, eval_data, scoring='accuracy', cv=cv, n_jobs=-1)
+        print('Accuracy: %.3f (%.3f)' % (mean(scores), std(scores)))
+        
     elif args.method == 'sequence_classifier':
         pet.train_classifier(sc_model_cfg, sc_train_cfg, sc_eval_cfg, output_dir=args.output_dir,
                              repetitions=args.sc_repetitions, train_data=train_data, unlabeled_data=unlabeled_data,
