@@ -93,7 +93,7 @@ class MarketClassificationDataProcessor(DataProcessor):
         """This method returns all possible labels for the task."""
         return MarketClassificationDataProcessor.LABELS
 
-    def _create_examples(self, path: str, set_type: str) -> List[InputExample]:
+    def _create_examples(path: str, set_type: str) -> List[InputExample]:
         examples = []
 
         with open(path) as f:
