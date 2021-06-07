@@ -66,7 +66,7 @@ def load_sequence_classifier_configs(args) -> Tuple[WrapperConfig, pet.TrainConf
     return model_cfg, train_cfg, eval_cfg
 
 
-def main():
+def main(args):
     parser = argparse.ArgumentParser(description="Command line interface for PET/iPET")
     kf5 = KFold(n_splits=5, shuffle=False)
 
@@ -87,7 +87,6 @@ def main():
                         help="The output directory where the model predictions and checkpoints will be written")
 
     # Other optional parameters
-  
     parser.add_argument("--train_examples", default=-1, type=int,
                         help="The total number of train examples to use, where -1 equals all examples.")
     parser.add_argument("--test_examples", default=-1, type=int,
@@ -124,8 +123,7 @@ def main():
                         help="Whether to use priming for evaluation")
     parser.add_argument("--eval_set", choices=['dev', 'test'], default='dev',
                         help="Whether to perform evaluation on the dev set or the test set")
-
-    args = parser.parse_args()
+    # args = parser.parse_args()
     logger.info("Parameters: {}".format(args))
 
     if os.path.exists(args.output_dir) and os.listdir(args.output_dir) \
@@ -185,4 +183,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    args = argparse.Namespace(method = "pet",  pattern_ids = 0 , data_dir= ".", model_type = "roberta", model_name = "roberta-large", task_name = "causes" , output_dir  = "./outputs",  do_train = True , do_eval = True, train_examples = -1, test_examples =-1, split_examples_evenly = False, eval_set = "dev")
+
+    main(args)

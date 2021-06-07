@@ -20,12 +20,15 @@ import os
 from typing import Tuple
 
 import torch
-
+from pet.classification_pvp import BusinessStatussPVP
+from pet.classification_task import MarketClassificationDataProcessor
 from pet.tasks import PROCESSORS, load_examples, UNLABELED_SET, TRAIN_SET, DEV_SET, TEST_SET, METRICS, DEFAULT_METRICS
 from pet.utils import eq_div
 from pet.wrapper import WRAPPER_TYPES, MODEL_CLASSES, SEQUENCE_CLASSIFIER_WRAPPER, WrapperConfig
+from sklearn.model_selection import StratifiedKFold, cross_val_score
 import pet
 import log
+import pandas as pd 
 
 logger = log.get_logger('root')
 
@@ -255,12 +258,20 @@ def main():
     ipet_cfg = load_ipet_config(args)
 
     if args.method == 'pet':
-        pet.train_pet(pet_model_cfg, pet_train_cfg, pet_eval_cfg, sc_model_cfg, sc_train_cfg, sc_eval_cfg,
+        model = pet.train_pet(pet_model_cfg, pet_train_cfg, pet_eval_cfg, sc_model_cfg, sc_train_cfg, sc_eval_cfg,
                       pattern_ids=args.pattern_ids, output_dir=args.output_dir,
                       ensemble_repetitions=args.pet_repetitions, final_repetitions=args.sc_repetitions,
                       reduction=args.reduction, train_data=train_data, unlabeled_data=unlabeled_data,
                       eval_data=eval_data, do_train=args.do_train, do_eval=args.do_eval,
                       no_distillation=args.no_distillation, seed=args.seed)
+
+        k_fold = StratifiedKFold(n_splits=10, shuffle=True, random_state=42, class_weight="balanced")
+        data =  pd.read_csv("all_causes.csv")
+        x = data.iloc[0]
+        y = x.iloc[1]
+        new_scores = cross_val_score(model, x, y, cv=k_fold, n_jobs=1)
+        print(new_scores.mean())
+
 
     elif args.method == 'ipet':
         pet.train_ipet(pet_model_cfg, pet_train_cfg, pet_eval_cfg, ipet_cfg, sc_model_cfg, sc_train_cfg, sc_eval_cfg,
