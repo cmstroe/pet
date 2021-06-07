@@ -265,7 +265,7 @@ def main():
                       eval_data=eval_data, do_train=args.do_train, do_eval=args.do_eval,
                       no_distillation=args.no_distillation, seed=args.seed)
 
-        k_fold = StratifiedKFold(n_splits=10, shuffle=True, random_state=42, class_weight="balanced")
+        k_fold = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
         data =  pd.read_csv("all_causes.csv")
         x = data.iloc[0]
         y = x.iloc[1]
