@@ -639,8 +639,8 @@ class BusinessStatussPVP(PVP):
 
 class CausesPVP(PVP):
     VERBALIZER = {
-        "0": ["no"],
-        "1": ["yes"]
+        "0": ["correct"],
+        "1": ["incorrect"]
     }
 
     def get_parts(self, example: InputExample) -> FilledPattern:
