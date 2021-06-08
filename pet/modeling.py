@@ -405,7 +405,7 @@ def train_pet_ensemble(model_config: WrapperConfig, train_config: TrainConfig, e
 
     if do_eval:
         logger.info("=== OVERALL RESULTS ===")
-        # _write_results(os.path.join(output_dir, 'result_test.txt'), results)
+        _write_results(os.path.join(output_dir, 'result_test.txt'), results)
     else:
         logger.info("=== ENSEMBLE TRAINING COMPLETE ===")
 
