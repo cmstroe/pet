@@ -647,10 +647,10 @@ class CausesPVP(PVP):
         text = self.shortenable(example.text_a)
 
         if self.pattern_id == 0:
-            # return [text,' describes a cause?', self.mask], []
+            return [text,' describes a cause?', self.mask], []
+            # return [text] , ['It is ' , self.mask , 'that this text described a cause']
+        elif self.pattern_id == 1:
             return [text] , ['It is ' , self.mask , 'that this text described a cause']
-        # elif self.pattern_id == 1:
-        #     return [text] , ['It is ' , self.mask , 'that this text described a cause']
         else:
             raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
 
