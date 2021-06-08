@@ -639,18 +639,22 @@ class BusinessStatussPVP(PVP):
 
 class CausesPVP(PVP):
     VERBALIZER = {
-        "0": ["correct"],
-        "1": ["incorrect"]
+        "0": ["no"],
+        "1": ["yes"]
     }
 
     def get_parts(self, example: InputExample) -> FilledPattern:
         text = self.shortenable(example.text_a)
 
         if self.pattern_id == 0:
-            return [text,' describes a cause?', self.mask], []
+            return [text,' does the previous text contain a reason?', self.mask], []
             # return [text] , ['It is ' , self.mask , 'that this text described a cause']
-        elif self.pattern_id == 1:
-            return [text] , ['It is ' , self.mask , 'that this text described a cause']
+        # elif self.pattern_id == 1:
+        #     return [text] , ['It is ' , self.mask , 'that this text described a cause']
+
+            # does the following contain/highlight/explain a reason/cause? tes/no
+
+            # sentence. is the cause/reason explained in this sentnce? yes/no
         else:
             raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
 
