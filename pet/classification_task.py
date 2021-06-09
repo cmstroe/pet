@@ -34,10 +34,10 @@ class MarketClassificationDataProcessor(DataProcessor):
     TASK_NAME = "causes"
 
     # Set this to the name of the file containing the train examples
-    TRAIN_FILE_NAME = "train0.csv"
+    TRAIN_FILE_NAME = "train1.csv"
 
     # Set this to the name of the file containing the dev examples
-    DEV_FILE_NAME = "test0.csv"
+    DEV_FILE_NAME = "test1.csv"
 
     # Set this to the name of the file containing the test examples
     TEST_FILE_NAME = ""
