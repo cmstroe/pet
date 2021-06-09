@@ -647,7 +647,7 @@ class CausesPVP(PVP):
         text = self.shortenable(example.text_a)
 
         if self.pattern_id == 0:
-            return [text,' does the previous text highlight a reason?', self.mask], []
+            return [text,' does the previous text explain a reason?', self.mask], []
             # return [text] , ['It is ' , self.mask , 'that this text described a cause']
         # elif self.pattern_id == 1:
         #     return [text] , ['It is ' , self.mask , 'that this text described a cause']
