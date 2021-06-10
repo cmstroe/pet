@@ -99,6 +99,7 @@ class MarketClassificationDataProcessor(DataProcessor):
         with open(path) as f:
             reader = csv.reader(f, delimiter=',')
             for idx, row in enumerate(reader):
+                print(idx)
                 label, body = row
                 guid = "%s-%s" % (set_type, idx)
                 text_a = body.replace('\\n', ' ').replace('\\', ' ')
