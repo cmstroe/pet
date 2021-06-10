@@ -20,12 +20,10 @@ import os
 from typing import Tuple
 
 import torch
-from pet.classification_pvp import BusinessStatussPVP
-from pet.classification_task import MarketClassificationDataProcessor
-from pet.tasks import PROCESSORS, load_examples, UNLABELED_SET, TRAIN_SET, DEV_SET, TEST_SET, METRICS, DEFAULT_METRICS
+from pet.classification_task import MarketClassificationDataProcessor, PROCESSORS
+from pet.tasks import load_examples, UNLABELED_SET, TRAIN_SET, DEV_SET, TEST_SET, METRICS, DEFAULT_METRICS
 from pet.utils import eq_div
 from pet.wrapper import WRAPPER_TYPES, MODEL_CLASSES, SEQUENCE_CLASSIFIER_WRAPPER, WrapperConfig
-from sklearn.model_selection import StratifiedKFold, cross_val_score
 import pet
 import log
 import pandas as pd 
