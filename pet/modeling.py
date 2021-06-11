@@ -145,10 +145,10 @@ class IPetConfig(PetConfig):
         self.n_most_likely = n_most_likely
 
 
-def init_model(config: WrapperConfig) -> TransformerModelWrapper:
+def init_model(config: WrapperConfig, subj, verb) -> TransformerModelWrapper:
     """Initialize a new model from the given config."""
     assert config.pattern_id is not None, 'A pattern_id must be set for initializing a new PET model'
-    model = TransformerModelWrapper(config)
+    model = TransformerModelWrapper(config, subj, verb)
     return model
 
 
@@ -343,7 +343,7 @@ def train_pet_ensemble(subj, verb, model_config: WrapperConfig, train_config: Tr
             if not os.path.exists(pattern_iter_output_dir):
                 os.makedirs(pattern_iter_output_dir)
 
-            wrapper = init_model(model_config)
+            wrapper = init_model(model_config, subj, verb)
 
             # Training
             if do_train:
@@ -381,7 +381,7 @@ def train_pet_ensemble(subj, verb, model_config: WrapperConfig, train_config: Tr
             if do_eval:
                 logger.info("Starting evaluation...")
                 if not wrapper:
-                    wrapper = TransformerModelWrapper.from_pretrained(subj, verb,pattern_iter_output_dir)
+                    wrapper = TransformerModelWrapper.from_pretrained(subj, verb, pattern_iter_output_dir)
 
                 eval_result = evaluate(wrapper, eval_data, eval_config, priming_data=train_data)
 

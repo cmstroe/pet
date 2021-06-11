@@ -135,9 +135,11 @@ class WrapperConfig(object):
 class TransformerModelWrapper:
     """A wrapper around a Transformer-based language model."""
 
-    def __init__(self, config: WrapperConfig):
+    def __init__(self, config: WrapperConfig, subj, verb):
         """Create a new wrapper from the given config."""
         self.config = config
+        self.subj = subj
+        self.verb = verb
         config_class = MODEL_CLASSES[self.config.model_type]['config']
         tokenizer_class = MODEL_CLASSES[self.config.model_type]['tokenizer']
         model_class = MODEL_CLASSES[self.config.model_type][self.config.wrapper_type]
@@ -156,7 +158,7 @@ class TransformerModelWrapper:
         self.model = model_class.from_pretrained(config.model_name_or_path, config=model_config,
                                                  cache_dir=config.cache_dir if config.cache_dir else None)
 
-        self.preprocessor = PREPROCESSORS[self.config.wrapper_type](self, self.config.task_name, self.config.pattern_id,
+        self.preprocessor = PREPROCESSORS[self.config.wrapper_type](self, self.config.task_name, subj, verb, self.config.pattern_id,
                                                                     self.config.verbalizer_file)
         self.task_helper = TASK_HELPERS[self.config.task_name](self) if self.config.task_name in TASK_HELPERS else None
 

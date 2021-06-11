@@ -40,7 +40,7 @@ class PVP(ABC):
     custom implementation of a PVP.
     """
 
-    def __init__(self, subj, verb,  wrapper, pattern_id: int = 0, verbalizer_file: str = None, seed: int = 42):
+    def __init__(self, wrapper, subj, verb, pattern_id: int = 0, verbalizer_file: str = None, seed: int = 42):
         """
         Create a new PVP.
 
