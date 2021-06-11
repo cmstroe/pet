@@ -254,15 +254,13 @@ def main():
     pet_model_cfg, pet_train_cfg, pet_eval_cfg = load_pet_configs(args)
     sc_model_cfg, sc_train_cfg, sc_eval_cfg = load_sequence_classifier_configs(args)
     ipet_cfg = load_ipet_config(args)
-
-    pvp = ["", ]
-
+    
     if args.method == 'pet':
 
         for verb in ['contain', 'highlight', 'explain']:
             for subj in ['reason', 'cause']:
                 pet.train_pet(subj, verb, pet_model_cfg, pet_train_cfg, pet_eval_cfg, sc_model_cfg, sc_train_cfg, sc_eval_cfg,
-                      pattern_ids=args.pattern_ids, output_dir=args.output_dir,
+                      pattern_ids=args.pattern_ids, output_dir=args.output_dir + "_" + verb + "_" + subj,
                       ensemble_repetitions=args.pet_repetitions, final_repetitions=args.sc_repetitions,
                       reduction=args.reduction, train_data=train_data, unlabeled_data=unlabeled_data,
                       eval_data=eval_data, do_train=args.do_train, do_eval=args.do_eval,
