@@ -218,7 +218,7 @@ def train_ipet(ensemble_model_config: WrapperConfig, ensemble_train_config: Trai
                      eval_data=eval_data, do_train=do_train, do_eval=do_eval)
 
 
-def train_pet(subj, verb, ensemble_model_config: WrapperConfig, ensemble_train_config: TrainConfig,
+def  train_pet(subj, verb, ensemble_model_config: WrapperConfig, ensemble_train_config: TrainConfig,
               ensemble_eval_config: EvalConfig, final_model_config: WrapperConfig, final_train_config: TrainConfig,
               final_eval_config: EvalConfig, pattern_ids: List[int], output_dir: str, ensemble_repetitions: int = 3,
               final_repetitions: int = 1, reduction: str = 'wmean', train_data: List[InputExample] = None,
@@ -248,7 +248,7 @@ def train_pet(subj, verb, ensemble_model_config: WrapperConfig, ensemble_train_c
     """
 
     # Step 1: Train an ensemble of models corresponding to individual patterns
-    train_pet_ensemble(ensemble_model_config, ensemble_train_config, ensemble_eval_config, pattern_ids, output_dir,
+    train_pet_ensemble(subj, verb, ensemble_model_config, ensemble_train_config, ensemble_eval_config, pattern_ids, output_dir,
                        repetitions=ensemble_repetitions, train_data=train_data, unlabeled_data=unlabeled_data,
                        eval_data=eval_data, do_train=do_train, do_eval=do_eval,
                        save_unlabeled_logits=not no_distillation, seed=seed)
@@ -300,7 +300,7 @@ def train_classifier(model_config: WrapperConfig, train_config: TrainConfig, eva
                        do_eval=do_eval, seed=seed)
 
 
-def train_pet_ensemble(model_config: WrapperConfig, train_config: TrainConfig, eval_config: EvalConfig,
+def train_pet_ensemble(subj, verb, model_config: WrapperConfig, train_config: TrainConfig, eval_config: EvalConfig,
                        pattern_ids: List[int], output_dir: str, ipet_data_dir: str = None, repetitions: int = 3,
                        train_data: List[InputExample] = None, unlabeled_data: List[InputExample] = None,
                        eval_data: List[InputExample] = None, do_train: bool = True, do_eval: bool = True,
@@ -355,7 +355,7 @@ def train_pet_ensemble(model_config: WrapperConfig, train_config: TrainConfig, e
                 else:
                     ipet_train_data = None
 
-                results_dict.update(train_single_model(wrapper, train_data, train_config, eval_config,
+                results_dict.update(train_single_model(subj, verb, wrapper, train_data, train_config, eval_config,
                                                        ipet_train_data=ipet_train_data,
                                                        unlabeled_data=unlabeled_data))
 
@@ -410,7 +410,7 @@ def train_pet_ensemble(model_config: WrapperConfig, train_config: TrainConfig, e
         logger.info("=== ENSEMBLE TRAINING COMPLETE ===")
 
 
-def train_single_model(model: TransformerModelWrapper, train_data: List[InputExample], config: TrainConfig,
+def train_single_model(subj, verb, model: TransformerModelWrapper, train_data: List[InputExample], config: TrainConfig,
                        eval_config: EvalConfig = None, ipet_train_data: List[InputExample] = None,
                        unlabeled_data: List[InputExample] = None, return_train_set_results: bool = True):
     """
@@ -443,7 +443,7 @@ def train_single_model(model: TransformerModelWrapper, train_data: List[InputExa
     if not all_train_data and not config.use_logits:
         logger.warning('Training method was called without training examples')
     else:
-        global_step, tr_loss = model.train(
+        global_step, tr_loss = model.train( subj, verb,
             all_train_data, device,
             per_gpu_train_batch_size=config.per_gpu_train_batch_size,
             per_gpu_unlabeled_batch_size=config.per_gpu_unlabeled_batch_size,
