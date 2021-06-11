@@ -161,7 +161,7 @@ class TransformerModelWrapper:
         self.task_helper = TASK_HELPERS[self.config.task_name](self) if self.config.task_name in TASK_HELPERS else None
 
     @classmethod
-    def from_pretrained(cls, path: str) -> 'TransformerModelWrapper':
+    def from_pretrained(subj, verb,cls, path: str) -> 'TransformerModelWrapper':
         """Load a pretrained wrapper from a given path."""
         wrapper = TransformerModelWrapper.__new__(TransformerModelWrapper)
         wrapper.config = wrapper._load_config(path)
@@ -169,7 +169,7 @@ class TransformerModelWrapper:
         model_class = MODEL_CLASSES[wrapper.config.model_type][wrapper.config.wrapper_type]
         wrapper.model = model_class.from_pretrained(path)
         wrapper.tokenizer = tokenizer_class.from_pretrained(path)
-        wrapper.preprocessor = PREPROCESSORS[wrapper.config.wrapper_type](
+        wrapper.preprocessor = PREPROCESSORS[wrapper.config.wrapper_type](subj, verb, 
             wrapper, wrapper.config.task_name, wrapper.config.pattern_id, wrapper.config.verbalizer_file)
         wrapper.task_helper = TASK_HELPERS[wrapper.config.task_name](wrapper) \
             if wrapper.config.task_name in TASK_HELPERS else None

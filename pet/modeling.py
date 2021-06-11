@@ -381,7 +381,7 @@ def train_pet_ensemble(subj, verb, model_config: WrapperConfig, train_config: Tr
             if do_eval:
                 logger.info("Starting evaluation...")
                 if not wrapper:
-                    wrapper = TransformerModelWrapper.from_pretrained(pattern_iter_output_dir)
+                    wrapper = TransformerModelWrapper.from_pretrained(subj, verb,pattern_iter_output_dir)
 
                 eval_result = evaluate(wrapper, eval_data, eval_config, priming_data=train_data)
 

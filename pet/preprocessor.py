@@ -25,7 +25,7 @@ class Preprocessor(ABC):
     processed by the model being used.
     """
 
-    def __init__(self, wrapper, task_name, pattern_id: int = 0, verbalizer_file: str = None, subj =None, verb =None,):
+    def __init__(self, subj, verb, wrapper, task_name, pattern_id: int = 0,verbalizer_file: str = None):
         """
         Create a new preprocessor.
 
