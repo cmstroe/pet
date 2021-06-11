@@ -40,7 +40,7 @@ class PVP(ABC):
     custom implementation of a PVP.
     """
 
-    def __init__(self, wrapper, pattern_id: int = 0, verbalizer_file: str = None, seed: int = 42):
+    def __init__(self, subj, verb,  wrapper, pattern_id: int = 0, verbalizer_file: str = None, seed: int = 42):
         """
         Create a new PVP.
 
@@ -49,6 +49,8 @@ class PVP(ABC):
         :param verbalizer_file: an optional file that contains the verbalizer to be used
         :param seed: a seed to be used for generating random numbers if necessary
         """
+        self.subj = subj
+        self.verb = verb
         self.wrapper = wrapper
         self.pattern_id = pattern_id
         self.rng = random.Random(seed)
@@ -639,15 +641,15 @@ class BusinessStatussPVP(PVP):
 
 class CausesPVP(PVP):
     VERBALIZER = {
-        "0": ["no"],
-        "1": ["yes"]
+        "0": ["No"],
+        "1": ["Yes"]
     }
 
     def get_parts(self, example: InputExample) -> FilledPattern:
         text = self.shortenable(example.text_a)
 
         if self.pattern_id == 0:
-            return [text,' does the previous text explain a reason?', self.mask], []
+            return [text,' Does the previous text ' + self.verb +  'a' + self.subj + '?', self.mask], []
             # return [text] , ['It is ' , self.mask , 'that this text described a cause']
         # elif self.pattern_id == 1:
         #     return [text] , ['It is ' , self.mask , 'that this text described a cause']

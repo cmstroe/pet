@@ -218,7 +218,7 @@ def train_ipet(ensemble_model_config: WrapperConfig, ensemble_train_config: Trai
                      eval_data=eval_data, do_train=do_train, do_eval=do_eval)
 
 
-def train_pet(ensemble_model_config: WrapperConfig, ensemble_train_config: TrainConfig,
+def train_pet(subj, verb, ensemble_model_config: WrapperConfig, ensemble_train_config: TrainConfig,
               ensemble_eval_config: EvalConfig, final_model_config: WrapperConfig, final_train_config: TrainConfig,
               final_eval_config: EvalConfig, pattern_ids: List[int], output_dir: str, ensemble_repetitions: int = 3,
               final_repetitions: int = 1, reduction: str = 'wmean', train_data: List[InputExample] = None,

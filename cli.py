@@ -20,7 +20,7 @@ import os
 from typing import Tuple
 
 import torch
-from pet.classification_task import MarketClassificationDataProcessor, PROCESSORS
+from pet.classification_task import PROCESSORS
 from pet.tasks import load_examples, UNLABELED_SET, TRAIN_SET, DEV_SET, TEST_SET, METRICS, DEFAULT_METRICS
 from pet.utils import eq_div
 from pet.wrapper import WRAPPER_TYPES, MODEL_CLASSES, SEQUENCE_CLASSIFIER_WRAPPER, WrapperConfig
@@ -255,8 +255,13 @@ def main():
     sc_model_cfg, sc_train_cfg, sc_eval_cfg = load_sequence_classifier_configs(args)
     ipet_cfg = load_ipet_config(args)
 
+    pvp = ["", ]
+
     if args.method == 'pet':
-        pet.train_pet(pet_model_cfg, pet_train_cfg, pet_eval_cfg, sc_model_cfg, sc_train_cfg, sc_eval_cfg,
+
+        for verb in ['contain', 'highlight', 'explain']:
+            for subj in ['reason', 'cause']:
+                pet.train_pet(verb. subj, pet_model_cfg, pet_train_cfg, pet_eval_cfg, sc_model_cfg, sc_train_cfg, sc_eval_cfg,
                       pattern_ids=args.pattern_ids, output_dir=args.output_dir,
                       ensemble_repetitions=args.pet_repetitions, final_repetitions=args.sc_repetitions,
                       reduction=args.reduction, train_data=train_data, unlabeled_data=unlabeled_data,

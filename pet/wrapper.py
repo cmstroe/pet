@@ -191,7 +191,7 @@ class TransformerModelWrapper:
         with open(os.path.join(path, CONFIG_NAME), 'r') as f:
             return jsonpickle.decode(f.read())
 
-    def train(self, task_train_data: List[InputExample], device, per_gpu_train_batch_size: int = 8, n_gpu: int = 1,
+    def train(self, subj, verb, task_train_data: List[InputExample], device, per_gpu_train_batch_size: int = 8, n_gpu: int = 1,
               num_train_epochs: int = 3, gradient_accumulation_steps: int = 1, weight_decay: float = 0.0,
               learning_rate: float = 5e-5, adam_epsilon: float = 1e-8, warmup_steps=0, max_grad_norm: float = 1,
               logging_steps: int = 50, per_gpu_unlabeled_batch_size: int = 8, unlabeled_data: List[InputExample] = None,
