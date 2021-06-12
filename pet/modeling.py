@@ -294,7 +294,7 @@ def train_classifier(model_config: WrapperConfig, train_config: TrainConfig, eva
     :param seed: the random seed to use
     """
 
-    train_pet_ensemble(model_config, train_config, eval_config, pattern_ids=[0], output_dir=output_dir,
+    train_pet_ensemble(subj = subj, verb = verb, model_config = model_config, train_config = train_config, eval_config = eval_config, pattern_ids=[0], output_dir=output_dir,
                        repetitions=repetitions,
                        train_data=train_data, unlabeled_data=unlabeled_data, eval_data=eval_data, do_train=do_train,
                        do_eval=do_eval, seed=seed)

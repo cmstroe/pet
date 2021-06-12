@@ -767,10 +767,10 @@ class BusinessStatusClassificationProcessor(DataProcessor):
     """Processor for the business status binary classification set."""
 
     def get_train_examples(self, data_dir):
-        return self._create_examples(os.path.join(data_dir, "train.csv"), "train")
+        return self._create_examples(os.path.join(data_dir, "train.csv"), TRAIN)
 
     def get_dev_examples(self, data_dir):
-        return self._create_examples(os.path.join(data_dir, "test.csv"), "dev")
+        return self._create_examples(os.path.join(data_dir, "test.csv"), DEV)
 
     def get_test_examples(self, data_dir) -> List[InputExample]:
         raise NotImplementedError()
