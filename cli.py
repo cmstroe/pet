@@ -129,7 +129,7 @@ def main():
                         help="If set to true, no distillation is performed (only for PET)")
     parser.add_argument("--pet_repetitions", default=3, type=int,
                         help="The number of times to repeat PET training and testing with different seeds.")
-    parser.add_argument("--pet_max_seq_length", default=128, type=int,
+    parser.add_argument("--pet_max_seq_length", default=64, type=int,
                         help="The maximum total input sequence length after tokenization for PET. Sequences longer "
                              "than this will be truncated, sequences shorter will be padded.")
     parser.add_argument("--pet_per_gpu_train_batch_size", default=4, type=int,
@@ -148,7 +148,7 @@ def main():
     # SequenceClassifier-specific optional parameters (also used for the final PET classifier)
     parser.add_argument("--sc_repetitions", default=1, type=int,
                         help="The number of times to repeat seq. classifier training and testing with different seeds.")
-    parser.add_argument("--sc_max_seq_length", default=128, type=int,
+    parser.add_argument("--sc_max_seq_length", default=64, type=int,
                         help="The maximum total input sequence length after tokenization for sequence classification. "
                              "Sequences longer than this will be truncated, sequences shorter will be padded.")
     parser.add_argument("--sc_per_gpu_train_batch_size", default=4, type=int,
