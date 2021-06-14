@@ -8,3 +8,7 @@
 glue_data/*
 out/*
 venv/*
+outputs_batch0_patterns_contain_/*
+pet/__pycache__
+bin
+lib/*
