@@ -269,12 +269,12 @@ def  train_pet(subj, verb, ensemble_model_config: WrapperConfig, ensemble_train_
     final_model_config.wrapper_type = SEQUENCE_CLASSIFIER_WRAPPER
     final_train_config.use_logits = True
 
-    train_classifier(final_model_config, final_train_config, final_eval_config, os.path.join(output_dir, 'final'),
+    train_classifier(subj, verb, final_model_config, final_train_config, final_eval_config, os.path.join(output_dir, 'final'),
                      repetitions=final_repetitions, train_data=train_data, unlabeled_data=unlabeled_data,
                      eval_data=eval_data, do_train=do_train, do_eval=do_eval, seed=seed)
 
 
-def train_classifier(model_config: WrapperConfig, train_config: TrainConfig, eval_config: EvalConfig, output_dir: str,
+def train_classifier(subj, verb, model_config: WrapperConfig, train_config: TrainConfig, eval_config: EvalConfig, output_dir: str,
                      repetitions: int = 3, train_data: List[InputExample] = None,
                      unlabeled_data: List[InputExample] = None, eval_data: List[InputExample] = None,
                      do_train: bool = True, do_eval: bool = True, seed: int = 42):
