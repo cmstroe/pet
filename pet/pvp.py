@@ -649,14 +649,17 @@ class CausesPVP(PVP):
         text = self.shortenable(example.text_a)
 
         if self.pattern_id == 0:
-            return [text,' Does the previous text ' + self.verb +  'a' + self.subj + '?', self.mask], []
-            # return [text] , ['It is ' , self.mask , 'that this text described a cause']
-        # elif self.pattern_id == 1:
-        #     return [text] , ['It is ' , self.mask , 'that this text described a cause']
-
-            # does the following contain/highlight/explain a reason/cause? tes/no
-
-            # sentence. is the cause/reason explained in this sentnce? yes/no
+            return [text,' Does the previous text contain a cause ?', self.mask], []
+        elif self.pattern_id == 1:
+            return [text, ' Does the previous text contain a reason ?', self.mask], []
+        elif self.pattern_id == 2:
+            return [text, ' Does the previous text highlight a cause ?', self.mask], []
+        elif self.pattern_id == 3:
+            return [text, ' Does the previous text highlight a reason ?', self.mask], []
+        elif self.pattern_id == 4:
+            return [text, ' Does the previous text explain a cause ?', self.mask], []
+        elif self.pattern_id == 5:
+            return [text, ' Does the previous text explain a reason ?', self.mask], []
         else:
             raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
 
