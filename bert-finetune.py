@@ -44,4 +44,4 @@ trainer = Trainer(
     eval_dataset=small_eval_dataset,
     compute_metrics=compute_metrics,
 )
-trainer.evaluate()
+print(trainer.evaluate())
