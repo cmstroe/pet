@@ -22,7 +22,7 @@ small_eval_dataset = tokenized_datasets['test']
 
 model = AutoModelForSequenceClassification.from_pretrained("bert-base-cased", num_labels=2)
 
-training_args = TrainingArguments("test_trainer", per_device_train_batch_size = 8)
+training_args = TrainingArguments("test_trainer", per_device_train_batch_size = 2)
 
 trainer = Trainer(
     model=model, args=training_args, train_dataset=small_train_dataset, eval_dataset=small_eval_dataset
