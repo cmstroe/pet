@@ -2,7 +2,7 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 import pandas as pd 
 
 k_fold = StratifiedKFold(n_splits=4, shuffle=True, random_state=42)
-data =  pd.read_csv("all_causes.csv", names = ['label', 'text'])
+data =  pd.read_csv("/Users/cristinastroe/Desktop/pet/datasets/partenership_full.csv", names = ['label', 'text'])
 X = data.text
 y = data.label
 

@@ -666,7 +666,38 @@ class CausesPVP(PVP):
     def verbalize(self, label) -> List[str]:
         return CausesPVP.VERBALIZER[label]
 
+class PartnerPVP(PVP):
+    VERBALIZER = {
+        "0": ["No"],
+        "1": ["Yes"]
+    }
 
+    def get_parts(self, example: InputExample) -> FilledPattern:
+        text = self.shortenable(example.text_a)
+
+        if self.pattern_id == 0:
+            return [text,'Is a collaboration mentioned in the previous sentence?', self.mask], []
+        elif self.pattern_id == 1:
+            return [text, 'Is a partnership mentioned in the previous sentence?', self.mask], []
+        elif self.pattern_id == 2:
+            return [text, ' Are the companies in a partnership?', self.mask], []
+        elif self.pattern_id == 3:
+            return [text, '  Are the companies in a collaboration?', self.mask], []
+        elif self.pattern_id == 4:
+            return [text, ' Did the companies start a new partnership ?', self.mask], []
+        elif self.pattern_id == 5:
+            return [text, 'Did the companies start a new collaboration?', self.mask], []
+        elif self.pattern_id == 6:
+            return [text, 'Is a client of the company mentioned?', self.mask], []
+        elif self.pattern_id == 7:
+            return [text, 'Is the company a client', self.mask], []
+        elif self.pattern_id == 8:
+            return [text, 'Is the company a supplier?', self.mask], []
+        else:
+            raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
+
+    def verbalize(self, label) -> List[str]:
+        return CausesPVP.VERBALIZER[label]
 
 PVPS = {
     'agnews': AgnewsPVP,
@@ -688,5 +719,6 @@ PVPS = {
     'ax-b': RtePVP,
     'ax-g': RtePVP,
     'b-status' : BusinessStatussPVP,
-    'causes' : CausesPVP
+    'causes' : CausesPVP,
+    'partner' : PartnerPVP
 }
