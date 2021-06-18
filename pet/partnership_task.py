@@ -16,16 +16,16 @@ class PartnershipClassificationDataProcessor(DataProcessor):
     TASK_NAME = "partner"
 
     # Set this to the name of the file containing the train examples
-    TRAIN_FILE_NAME = "datasets/partnership_train.csv"
+    TRAIN_FILE_NAME = "partnership_train.csv"
 
     # Set this to the name of the file containing the dev examples
-    DEV_FILE_NAME = "datasets/partnership_test.csv"
+    DEV_FILE_NAME = "partnership_test.csv"
 
     # Set this to the name of the file containing the test examples
     TEST_FILE_NAME = ""
 
     # Set this to the name of the file containing the unlabeled examples
-    UNLABELED_FILE_NAME = "datasets/partnership_unlabeled.csv"
+    UNLABELED_FILE_NAME = "partnership_unlabeled.csv"
 
     # Set this to a list of all labels in the train + test data
     LABELS = ["0", "1"]
