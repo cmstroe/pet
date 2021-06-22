@@ -69,7 +69,7 @@ class FundingClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the unlabeled data can be found
         :return: a list of unlabeled examples
         """
-        return self._create_examples(os.path.join(data_dir, PartnershipClassificationDataProcessor.UNLABELED_FILE_NAME), "unlabeled")
+        return self._create_examples(os.path.join(data_dir, FundingClassificationDataProcessor.UNLABELED_FILE_NAME), "unlabeled")
 
     def get_labels(self) -> List[str]:
         """This method returns all possible labels for the task."""
