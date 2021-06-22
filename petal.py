@@ -176,7 +176,7 @@ def main():
 
     # setup gpu/cpu
     device = torch.device("cuda:0")#if torch.cuda.is_available() else "cpu")
-    args.n_gpu = torch.cuda.device_count()
+    args.n_gpu =  1 # torch.cuda.device_count()
 
     # prepare task
     args.task_name = args.task_name.lower()
