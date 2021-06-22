@@ -427,7 +427,9 @@ def train_single_model(subj, verb, model: TransformerModelWrapper, train_data: L
     :return: a dictionary containing the global step, average loss and (optionally) results on the train set
     """
 
-    device = torch.device(config.device if config.device else "cuda:0")#if torch.cuda.is_available() else "cpu")
+    # device = torch.device(config.device if config.device else "cuda:0")#if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0")#if torch.cuda.is_available() else "cpu")
+    
     if not ipet_train_data:
         ipet_train_data = []
 
@@ -488,8 +490,8 @@ def evaluate(model: TransformerModelWrapper, eval_data: List[InputExample], conf
             example.meta['priming_data'] = priming_data
 
     metrics = config.metrics if config.metrics else ['acc']
-    device = torch.device(config.device if config.device else "cuda:0") #if torch.cuda.is_available() else "cpu")
-
+    # device = torch.device(config.device if config.device else "cuda:0") #if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0")
     model.model.to(device)
     results = model.eval(eval_data, device, per_gpu_eval_batch_size=config.per_gpu_eval_batch_size,
                          n_gpu=config.n_gpu, decoding_strategy=config.decoding_strategy, priming=config.priming)
