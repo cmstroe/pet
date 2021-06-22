@@ -223,7 +223,7 @@ def main():
         raise ValueError("Output directory ({}) already exists and is not empty.".format(args.output_dir))
 
     # Setup CUDA, GPU & distributed training
-    args.device = "cuda:0" if torch.cuda.is_available() and not args.no_cuda else "cpu"
+    args.device = "cuda:0"  #if torch.cuda.is_available() and not args.no_cuda else "cpu"
     args.n_gpu = torch.cuda.device_count()
 
     # Prepare task

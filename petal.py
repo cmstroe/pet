@@ -175,7 +175,7 @@ def main():
         json.dump(args.__dict__, fh, indent=2)
 
     # setup gpu/cpu
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0")#if torch.cuda.is_available() else "cpu")
     args.n_gpu = torch.cuda.device_count()
 
     # prepare task
