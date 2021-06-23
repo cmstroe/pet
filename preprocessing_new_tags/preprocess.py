@@ -51,6 +51,7 @@ if __name__ == "__main__":
     unlabeled_data_1 =  group(df, "general updates")[:70]
     unlabeled_data_2 =  group(df, "none/useless")[:70]
     
+    
     unlabeled_data = unlabeled_data_1.append(unlabeled_data_2, ignore_index = True).sample(frac=1)
     
     # total_data_ma = add_zeros(df_ma, unlabeled_data)
