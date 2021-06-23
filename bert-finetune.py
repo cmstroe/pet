@@ -17,6 +17,12 @@ tokenized_datasets = raw_datasets.map(tokenize_function, batched=True)
 small_train_dataset = tokenized_datasets['train']
 small_eval_dataset = tokenized_datasets['test']
 
+# train_list = small_train_dataset['label']
+# test_list = small_eval_dataset['label']
+
+# small_train_dataset['label'] = [int(i) for i in train_list]
+# small_eval_dataset['label'] = [int(i) for i in test_list]
+
 model = AutoModelForSequenceClassification.from_pretrained("bert-base-cased")
 
 training_args = TrainingArguments("test_trainer", per_device_train_batch_size = 2)
