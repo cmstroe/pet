@@ -8,9 +8,6 @@ raw_datasets = load_dataset('csv', data_files='datasets/train_funding.csv')['tra
 
 tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
 
-
-model = AutoModelForSequenceClassification.from_pretrained("bert-base-cased", num_labels=2)
-
 def tokenize_function(examples):
     return tokenizer(examples['text'], padding="max_length", truncation=True)
 
@@ -20,7 +17,7 @@ tokenized_datasets = raw_datasets.map(tokenize_function, batched=True)
 small_train_dataset = tokenized_datasets['train']
 small_eval_dataset = tokenized_datasets['test']
 
-model = AutoModelForSequenceClassification.from_pretrained("bert-base-cased", num_labels=2)
+model = AutoModelForSequenceClassification.from_pretrained("bert-base-cased")
 
 training_args = TrainingArguments("test_trainer", per_device_train_batch_size = 2)
 
