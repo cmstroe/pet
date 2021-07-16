@@ -1,6 +1,8 @@
 import json 
 import torch
 import log
+from typing import List, Dict
+
 from pet.wrapper import TransformerModelWrapper
 from pet.utils import InputExample, exact_match, save_logits, save_predictions, softmax, LogitsList, set_seed, eq_div
 
