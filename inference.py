@@ -76,7 +76,7 @@ def main():
 
     subj = 'a'
     verb = 'b'
-    pattern_iter_output_dir = "outputs_size500_one_patter_highlight_reason/final/p0-i2/wrapper_config.json"
+    pattern_iter_output_dir = "outputs_size500_one_patter_highlight_reason/final/p0-i2/"
     eval_data = "inference_data.csv"
     eval_config = "outputs_size500_one_patter_highlight_reason/final/p0-i2/eval_config.json"
 
