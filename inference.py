@@ -74,9 +74,9 @@ def main():
 
     logger = log.get_logger('root')
 
-    subj = 'a'
-    verb = 'b'
-    pattern_iter_output_dir = "outputs_size500_one_patter_highlight_reason/final/p0-i2/"
+    verb = "total"
+    subj = "patterns"
+    pattern_iter_output_dir = "outputs_funding_"
     eval_data = "inference_data.csv"
     eval_config = "outputs_size500_one_patter_highlight_reason/final/p0-i2/eval_config.json"
 
