@@ -81,7 +81,7 @@ class FundingClassificationDataProcessor(DataProcessor):
         examples = []
 
         with open(path) as f:
-            reader = csv.reader(f, delimiter=',')
+            reader = csv.reader(f, delimiter=',', encoding= 'unicode_escape')
             for idx, row in enumerate(reader):
                 print(idx)
                 body = row[0]
