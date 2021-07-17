@@ -1,32 +1,17 @@
 import json 
 import torch
 import log
+import argparse
 from typing import List, Dict
+
 from pet.modeling import EvalConfig
-from pet.wrapper import TransformerModelWrapper
+from pet.wrapper import TransformerModelWrapper, WrapperConfig, SEQUENCE_CLASSIFIER_WRAPPER
 from pet.utils import InputExample, exact_match, save_logits, save_predictions, softmax, LogitsList, set_seed, eq_div
+from pet.tasks import METRICS, DEFAULT_METRICS, load_examples
+from pet.modeling import TrainConfig, EvalConfig, WrapperConfig, train_classifier
+from pet.funding_task import PROCESSORS
+from run import load_sequence_classifier_configs
 
-
-# with open("preprocessing_new_tags/company_sentences_euro.json") as jsonFile:
-#     json_obj = json.load(jsonFile)
-
-# sentences = [], j = 0
-
-# for i in range (100, 300):
-#     obj = json_obj[i]
-#     sentences[j] = obj['sentences']
-#     j+=1
-
-# wrapper = TransformerModelWrapper.__new__(TransformerModelWrapper)
-# wrapper.config = wrapper._load_config(path)
-# tokenizer_class = MODEL_CLASSES[wrapper.config.model_type]['tokenizer']
-# model_class = MODEL_CLASSES[wrapper.config.model_type][wrapper.config.wrapper_type]
-# wrapper.model = model_class.from_pretrained(path)
-# wrapper.tokenizer = tokenizer_class.from_pretrained(path)
-# wrapper.preprocessor = PREPROCESSORS[wrapper.config.wrapper_type](subj, verb, 
-#             wrapper, wrapper.config.task_name, wrapper.config.pattern_id, wrapper.config.verbalizer_file)
-# wrapper.task_helper = TASK_HELPERS[wrapper.config.task_name](wrapper) \
-#             if wrapper.config.task_name in TASK_HELPERS else None
 
 def evaluate(model: TransformerModelWrapper, eval_data: List[InputExample], config: EvalConfig,
              priming_data: List[InputExample] = None) -> Dict:
@@ -70,6 +55,9 @@ def evaluate(model: TransformerModelWrapper, eval_data: List[InputExample], conf
     results['predictions'] = predictions
     return results
 
+
+
+
 def main():
 
     logger = log.get_logger('root')
@@ -77,26 +65,60 @@ def main():
     verb = "total"
     subj = "patterns"
     pattern_iter_output_dir = "outputs_funding_total_patterns/final/p0-i2/"
-    eval_data = "inference_data.csv"
+    TEST_SET = "inference_data"
+    eval_data = load_examples(
+        "funding", ".", TEST_SET, num_examples=-1)
+
     eval_config = "outputs_size500_one_patter_highlight_reason/final/p0-i2/eval_config.json"
 
-    wrapper = TransformerModelWrapper.from_pretrained(subj, verb, pattern_iter_output_dir)
+    sc_model_cfg = WrapperConfig(model_type='roberta', model_name_or_path='outputs_funding_total_patterns/final/p0-i2/config.json',
+                              wrapper_type=SEQUENCE_CLASSIFIER_WRAPPER, task_name='funding',
+                              label_list=["0", "1"], max_seq_length=64,
+                              verbalizer_file=None, cache_dir= ".")
 
-    eval_result = evaluate(wrapper, eval_data, eval_config, priming_data=None)
+    sc_train_cfg = TrainConfig(device="cuda:0", per_gpu_train_batch_size=4,
+                                per_gpu_unlabeled_batch_size=4, n_gpu=1,
+                                num_train_epochs=3, max_steps=-1,
+                                temperature=2,
+                                gradient_accumulation_steps=1,
+                                weight_decay=0.01, learning_rate=1e-5,
+                                adam_epsilon=1e-8, warmup_steps=0,
+                                max_grad_norm=1.0, use_logits=False)
 
-    save_predictions(os.path.join(pattern_iter_output_dir, 'predictions_10k.jsonl'), wrapper, eval_result)
-    save_logits(os.path.join(pattern_iter_output_dir, 'eval_logits_10k.txt'), eval_result['logits'])
+    metrics = METRICS.get("funding", DEFAULT_METRICS)
+    sc_eval_cfg = EvalConfig(device="cuda:0", n_gpu=1, metrics=metrics,
+                              per_gpu_eval_batch_size=8)
 
-    scores = eval_result['scores']
-    logger.info("--- RESULT (pattern_id={}, iteration={}) ---".format(pattern_id, iteration))
-    logger.info(scores)
 
-    results_dict['test_set_after_training'] = scores
-    with open(os.path.join(pattern_iter_output_dir, 'results_10k.json'), 'w') as fh:
-        json.dump(results_dict, fh)
+    train_classifier(subj, verb, model_config = sc_model_cfg, train_config = sc_train_cfg, eval_config = sc_eval_cfg, output_dir="./predictions",
+                             repetitions=1, train_data=None, unlabeled_data=None,
+                             eval_data=eval_data, do_train=False, do_eval=True, seed=42)
 
-    for metric, value in scores.items():
-        results[metric][pattern_id].append(value)
+    # wrapper = WrapperConfig(model_type= 'roberta', model_name_or_path= (pattern_iter_output_dir + "/pythorch_model.bin"),
+    #                           wrapper_type=SEQUENCE_CLASSIFIER_WRAPPER, task_name= "funding",
+    #                           label_list=[0,1], max_seq_length=64,
+    #                           verbalizer_file=None, cache_dir="/results")
+
+    # eval_cfg = pet.EvalConfig(
+    #                           per_gpu_eval_batch_size=args.sc_per_gpu_eval_batch_size)
+
+
+
+    # eval_result = evaluate(wrapper, eval_data, eval_config)
+
+    # save_predictions(os.path.join(pattern_iter_output_dir, 'predictions_10k.jsonl'), wrapper, eval_result)
+    # save_logits(os.path.join(pattern_iter_output_dir, 'eval_logits_10k.txt'), eval_result['logits'])
+
+    # scores = eval_result['scores']
+    # logger.info("--- RESULT (pattern_id={}, iteration={}) ---".format(pattern_id, iteration))
+    # logger.info(scores)
+
+    # results_dict['test_set_after_training'] = scores
+    # with open(os.path.join(pattern_iter_output_dir, 'results_10k.json'), 'w') as fh:
+    #     json.dump(results_dict, fh)
+
+    # for metric, value in scores.items():
+    #     results[metric][pattern_id].append(value)
 
 if __name__ == "__main__":
     main()

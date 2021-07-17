@@ -837,7 +837,7 @@ DEFAULT_METRICS = ["acc", "f1-macro"]
 
 TRAIN_SET = "train"
 DEV_SET = "dev"
-TEST_SET = "test"
+TEST_SET = "inference_data"
 UNLABELED_SET = "unlabeled"
 
 SET_TYPES = [TRAIN_SET, DEV_SET, TEST_SET, UNLABELED_SET]

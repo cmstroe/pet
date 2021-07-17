@@ -359,7 +359,7 @@ class TransformerModelWrapper:
         eval_dataloader = DataLoader(eval_dataset, sampler=eval_sampler, batch_size=eval_batch_size)
 
         if n_gpu > 1:
-            self.model = torch.nn.DataParallel(self.model)
+                self.model = torch.nn.DataParallel(self.model)
 
         preds = None
         all_indices, out_label_ids, question_ids = None, None, None
@@ -373,6 +373,8 @@ class TransformerModelWrapper:
             with torch.no_grad():
 
                 # some tasks require special evaluation
+
+                ##this is a tensor of log probability values
                 logits = self.task_helper.eval_step(batch,
                                                     decoding_strategy=decoding_strategy) if self.task_helper else None
 
