@@ -80,8 +80,8 @@ class FundingClassificationDataProcessor(DataProcessor):
     def _create_examples(self, path: str, set_type: str) -> List[InputExample]:
         examples = []
 
-        with open(path) as f:
-            reader = csv.reader(f, delimiter=',', encoding= 'unicode_escape')
+        with open(path,  encoding= 'unicode_escape') as f:
+            reader = csv.reader(f, delimiter=',')
             for idx, row in enumerate(reader):
                 print(idx)
                 body = row[0]
