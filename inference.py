@@ -71,10 +71,14 @@ def main():
 
     eval_config = "outputs_size500_one_patter_highlight_reason/final/p0-i2/eval_config.json"
 
-    sc_model_cfg = WrapperConfig(model_type='roberta', model_name_or_path='outputs_funding_total_patterns/final/p0-i2/eval_config.json',
+
+
+    sc_model_cfg = WrapperConfig(model_type='roberta', model_name_or_path='outputs_funding_total_patterns/final/p0-i2/wrapper_config.json',
                               wrapper_type=SEQUENCE_CLASSIFIER_WRAPPER, task_name='funding',
                               label_list=["0", "1"], max_seq_length=64,
                               verbalizer_file=None, cache_dir= ".")
+
+                              
 
     sc_train_cfg = TrainConfig(device="cuda:0", per_gpu_train_batch_size=4,
                                 per_gpu_unlabeled_batch_size=4, n_gpu=1,
