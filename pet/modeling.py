@@ -51,7 +51,7 @@ class PetConfig(ABC):
     def load(cls, path: str):
         """Load a config from a file."""
         cfg = cls.__new__(cls)
-        with open(path, 'r', encoding='utf8') as fh:
+        with open(path, 'r', encoding='utf-8') as fh:
             cfg.__dict__ = json.load(fh)
         return cfg
 
