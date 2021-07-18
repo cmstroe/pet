@@ -156,7 +156,7 @@ class TransformerModelWrapper:
         if self.config.model_type == 'gpt2':
             self.tokenizer.pad_token, self.tokenizer.mask_token = self.tokenizer.eos_token, self.tokenizer.eos_token
 
-        self.model = model_class.from_pretrained(config.model_name_or_path, config=model_config,
+        self.model = model_class.from_pretrained("outputs_size500_one_patter_highlight_reason/final/p0-i2/pytorch_model.bin", config=model_config,
                                                  cache_dir=config.cache_dir if config.cache_dir else None)
 
         self.preprocessor = PREPROCESSORS[self.config.wrapper_type](self, self.config.task_name, subj, verb, self.config.pattern_id,
