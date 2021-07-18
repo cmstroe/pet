@@ -14,6 +14,7 @@ import json
 import os
 import random
 import statistics
+import io
 from abc import ABC
 from collections import defaultdict
 from copy import deepcopy
@@ -51,7 +52,7 @@ class PetConfig(ABC):
     def load(cls, path: str):
         """Load a config from a file."""
         cfg = cls.__new__(cls)
-        with open(path, 'r', encoding='utf-8') as fh:
+        with io.open(path, 'r', encoding='windows-1252') as fh:
             cfg.__dict__ = json.load(fh)
         return cfg
 
