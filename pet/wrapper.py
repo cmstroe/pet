@@ -150,7 +150,7 @@ class TransformerModelWrapper:
             cache_dir=config.cache_dir if config.cache_dir else None, use_cache=False,  from_pt=True)
 
         self.tokenizer = tokenizer_class.from_pretrained(
-           "outputs_size500_one_patter_highlight_reason/final/p0-i2/tokenizer_config.json",
+           "roberta-large",
             cache_dir=config.cache_dir if config.cache_dir else None)  # type: PreTrainedTokenizer
 
         if self.config.model_type == 'gpt2':
