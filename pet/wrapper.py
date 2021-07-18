@@ -145,7 +145,6 @@ class TransformerModelWrapper:
         tokenizer_class = MODEL_CLASSES[self.config.model_type]['tokenizer']
         model_class = MODEL_CLASSES[self.config.model_type][self.config.wrapper_type]
         
-        ipdb.set_trace()
         model_config = config_class.from_pretrained(
             config.model_name_or_path, num_labels=len(config.label_list), finetuning_task=config.task_name,
             cache_dir=config.cache_dir if config.cache_dir else None, use_cache=False,  from_pt=True)
