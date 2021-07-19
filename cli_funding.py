@@ -92,7 +92,7 @@ def load_ipet_config(args) -> pet.IPetConfig:
 def main():
     parser = argparse.ArgumentParser(description="Command line interface for PET/iPET")
 
-    # Required parameters
+# Required parameters
     parser.add_argument("--method", required=True, choices=['pet', 'ipet', 'sequence_classifier'],
                         help="The training method to use. Either regular sequence classification, PET or iPET.")
     parser.add_argument("--data_dir", default=None, type=str, required=True,
@@ -188,7 +188,7 @@ def main():
                         help="If true, train examples are not chosen randomly, but split evenly across all labels.")
     parser.add_argument("--cache_dir", default="", type=str,
                         help="Where to store the pre-trained models downloaded from S3.")
-    parser.add_argument("--learning_rate", default=adam_epsilon, type=float,
+    parser.add_argument("--learning_rate", default=1e-5, type=float,
                         help="The initial learning rate for Adam.")
     parser.add_argument("--weight_decay", default=0.01, type=float,
                         help="Weight decay if we apply some.")
