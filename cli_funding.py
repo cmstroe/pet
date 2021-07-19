@@ -225,8 +225,7 @@ def main():
     # Setup CUDA, GPU & distributed training
     args.device = "cuda:0"  #if torch.cuda.is_available() and not args.no_cuda else "cpu"
     args.n_gpu = 1 #torch.cuda.device_count()
-
-    # Prepare task
+ # Prepare task
     args.task_name = args.task_name.lower()
     if args.task_name not in PROCESSORS:
         raise ValueError("Task '{}' not found".format(args.task_name))
