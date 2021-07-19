@@ -254,7 +254,6 @@ def main():
     pet_model_cfg, pet_train_cfg, pet_eval_cfg = load_pet_configs(args)
     sc_model_cfg, sc_train_cfg, sc_eval_cfg = load_sequence_classifier_configs(args)
     ipet_cfg = load_ipet_config(args)
-    
     if args.method == 'pet':
 
         # for verb in ['contain', 'highlight', 'explain']:
@@ -284,7 +283,6 @@ def main():
 
     else:
         raise ValueError(f"Training method '{args.method}' not implemented")
-
 
 if __name__ == "__main__":
     main()
