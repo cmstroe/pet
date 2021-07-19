@@ -88,6 +88,8 @@ def main():
                                 weight_decay=0.01, learning_rate=1e-5,
                                 adam_epsilon=1e-8, warmup_steps=0,
                                 max_grad_norm=1.0, use_logits=False)
+    
+    sc_train_cfg.load(TrainConfig, "outputs_funding_total_patterns/final/p0-i2/wrapper_config.json")
 
     metrics = METRICS.get("funding", DEFAULT_METRICS)
     sc_eval_cfg = EvalConfig(device="cuda:0", n_gpu=1, metrics=metrics,

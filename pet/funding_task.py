@@ -22,7 +22,7 @@ class FundingClassificationDataProcessor(DataProcessor):
     DEV_FILE_NAME = "funding_test.csv"
 
     # Set this to the name of the file containing the test examples
-    TEST_FILE_NAME = "inference_data.csv"
+    TEST_FILE_NAME = "funding_test.csv"
 
     # Set this to the name of the file containing the unlabeled examples
     UNLABELED_FILE_NAME = "funding_unlabeled.csv"
