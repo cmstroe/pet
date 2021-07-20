@@ -13,19 +13,19 @@ class FundingClassificationDataProcessor(DataProcessor):
     """
 
     # Set this to the name of the task
-    TASK_NAME = "funding"
+    TASK_NAME = "causes"
 
     # Set this to the name of the file containing the train examples
-    TRAIN_FILE_NAME = "funding_train.csv"
+    TRAIN_FILE_NAME = "train0.csv"
 
     # Set this to the name of the file containing the dev examples
-    DEV_FILE_NAME = "funding_test.csv"
+    DEV_FILE_NAME = "test0.csv"
 
     # Set this to the name of the file containing the test examples
-    TEST_FILE_NAME = "funding_test.csv"
+    TEST_FILE_NAME = "test0.csv"
 
     # Set this to the name of the file containing the unlabeled examples
-    UNLABELED_FILE_NAME = "funding_unlabeled.csv"
+    UNLABELED_FILE_NAME = "unlabeled.csv"
 
     # Set this to a list of all labels in the train + test data
     LABELS = ["0", "1"]
