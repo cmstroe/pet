@@ -650,16 +650,16 @@ class CausesPVP(PVP):
 
         if self.pattern_id == 0:
             return [text,' Does the previous text contain a cause ?', self.mask], []
-        # elif self.pattern_id == 1:
-        #     return [text, ' Does the previous text contain a reason ?', self.mask], []
-        # elif self.pattern_id == 2:
-        #     return [text, ' Does the previous text highlight a cause ?', self.mask], []
-        # elif self.pattern_id == 3:
-        #     return [text, ' Does the previous text highlight a reason ?', self.mask], []
-        # elif self.pattern_id == 4:
-        #     return [text, ' Does the previous text explain a cause ?', self.mask], []
-        # elif self.pattern_id == 5:
-        #     return [text, ' Does the previous text explain a reason ?', self.mask], []
+        elif self.pattern_id == 1:
+            return [text, ' Does the previous text contain a reason ?', self.mask], []
+        elif self.pattern_id == 2:
+            return [text, ' Does the previous text highlight a cause ?', self.mask], []
+        elif self.pattern_id == 3:
+            return [text, ' Does the previous text highlight a reason ?', self.mask], []
+        elif self.pattern_id == 4:
+            return [text, ' Does the previous text explain a cause ?', self.mask], []
+        elif self.pattern_id == 5:
+            return [text, ' Does the previous text explain a reason ?', self.mask], []
         else:
             raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
 
