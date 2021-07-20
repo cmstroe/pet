@@ -110,7 +110,6 @@ class WrapperConfig(object):
                  label_list: List[str], pattern_id: int = 0, verbalizer_file: str = None, cache_dir: str = None):
         """
         Create a new config.
-
         :param model_type: the model type (e.g., 'bert', 'roberta', 'albert')
         :param model_name_or_path: the model name (e.g., 'roberta-large') or path to a pretrained model
         :param wrapper_type: the wrapper type (one of 'mlm', 'plm' and 'sequence_classifier')
@@ -135,11 +134,9 @@ class WrapperConfig(object):
 class TransformerModelWrapper:
     """A wrapper around a Transformer-based language model."""
 
-    def __init__(self, config: WrapperConfig, subj, verb):
+    def __init__(self, config: WrapperConfig):
         """Create a new wrapper from the given config."""
         self.config = config
-        self.subj = subj
-        self.verb = verb
         config_class = MODEL_CLASSES[self.config.model_type]['config']
         tokenizer_class = MODEL_CLASSES[self.config.model_type]['tokenizer']
         model_class = MODEL_CLASSES[self.config.model_type][self.config.wrapper_type]
@@ -158,12 +155,12 @@ class TransformerModelWrapper:
         self.model = model_class.from_pretrained(config.model_name_or_path, config=model_config,
                                                  cache_dir=config.cache_dir if config.cache_dir else None)
 
-        self.preprocessor = PREPROCESSORS[self.config.wrapper_type](self, self.config.task_name, subj, verb, self.config.pattern_id,
+        self.preprocessor = PREPROCESSORS[self.config.wrapper_type](self, self.config.task_name, self.config.pattern_id,
                                                                     self.config.verbalizer_file)
         self.task_helper = TASK_HELPERS[self.config.task_name](self) if self.config.task_name in TASK_HELPERS else None
 
     @classmethod
-    def from_pretrained(subj, verb,cls, path: str) -> 'TransformerModelWrapper':
+    def from_pretrained(cls, path: str) -> 'TransformerModelWrapper':
         """Load a pretrained wrapper from a given path."""
         wrapper = TransformerModelWrapper.__new__(TransformerModelWrapper)
         wrapper.config = wrapper._load_config(path)
@@ -171,7 +168,7 @@ class TransformerModelWrapper:
         model_class = MODEL_CLASSES[wrapper.config.model_type][wrapper.config.wrapper_type]
         wrapper.model = model_class.from_pretrained(path)
         wrapper.tokenizer = tokenizer_class.from_pretrained(path)
-        wrapper.preprocessor = PREPROCESSORS[wrapper.config.wrapper_type](subj, verb, 
+        wrapper.preprocessor = PREPROCESSORS[wrapper.config.wrapper_type](
             wrapper, wrapper.config.task_name, wrapper.config.pattern_id, wrapper.config.verbalizer_file)
         wrapper.task_helper = TASK_HELPERS[wrapper.config.task_name](wrapper) \
             if wrapper.config.task_name in TASK_HELPERS else None
@@ -193,7 +190,7 @@ class TransformerModelWrapper:
         with open(os.path.join(path, CONFIG_NAME), 'r') as f:
             return jsonpickle.decode(f.read())
 
-    def train(self, subj, verb, task_train_data: List[InputExample], device, per_gpu_train_batch_size: int = 8, n_gpu: int = 1,
+    def train(self, task_train_data: List[InputExample], device, per_gpu_train_batch_size: int = 8, n_gpu: int = 1,
               num_train_epochs: int = 3, gradient_accumulation_steps: int = 1, weight_decay: float = 0.0,
               learning_rate: float = 5e-5, adam_epsilon: float = 1e-8, warmup_steps=0, max_grad_norm: float = 1,
               logging_steps: int = 50, per_gpu_unlabeled_batch_size: int = 8, unlabeled_data: List[InputExample] = None,
@@ -201,7 +198,6 @@ class TransformerModelWrapper:
               max_steps=-1, **_):
         """
         Train the underlying language model.
-
         :param task_train_data: the training examples to use
         :param device: the training device (cpu/gpu)
         :param per_gpu_train_batch_size: the number of training examples per batch and gpu
@@ -342,7 +338,6 @@ class TransformerModelWrapper:
              priming: bool = False, decoding_strategy: str = 'default') -> Dict:
         """
         Evaluate the underlying language model.
-
         :param eval_data: the evaluation examples to use
         :param device: the evaluation device (cpu/gpu)
         :param per_gpu_eval_batch_size: the number of evaluation examples per batch and gpu

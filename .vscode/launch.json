@@ -9,7 +9,20 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "env":   
+                {
+                "method": "pet",
+                "pattern_ids " : "0 1 2", 
+                "data_dir" :  "results" ,
+                "model_type" : "roberta",
+                "model_name_or_path" :  "roberta-large", 
+                "task_name" : "funding",
+                "output_dir" : "results" ,
+                "do_train" : "True" , 
+                "do_eval" : "True" 
+                }
+            
         },
         {
             "name": "Python: Module",

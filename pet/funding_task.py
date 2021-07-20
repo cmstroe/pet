@@ -22,7 +22,7 @@ class FundingClassificationDataProcessor(DataProcessor):
     DEV_FILE_NAME = "funding_test.csv"
 
     # Set this to the name of the file containing the test examples
-    TEST_FILE_NAME = ""
+    TEST_FILE_NAME = "funding_test.csv"
 
     # Set this to the name of the file containing the unlabeled examples
     UNLABELED_FILE_NAME = "funding_unlabeled.csv"
@@ -61,7 +61,9 @@ class FundingClassificationDataProcessor(DataProcessor):
         :param data_dir: the directory in which the test data can be found
         :return: a list of test examples
         """
-        raise NotImplementedError()
+        x  = os.path.join(data_dir, FundingClassificationDataProcessor.TEST_FILE_NAME)
+        print(x)
+        return self._create_examples(x, "test")
 
     def get_unlabeled_examples(self, data_dir) -> List[InputExample]:
         """
@@ -78,11 +80,12 @@ class FundingClassificationDataProcessor(DataProcessor):
     def _create_examples(self, path: str, set_type: str) -> List[InputExample]:
         examples = []
 
-        with open(path) as f:
+        with open(path,  encoding= 'unicode_escape') as f:
             reader = csv.reader(f, delimiter=',')
             for idx, row in enumerate(reader):
                 print(idx)
-                label, body = row
+                body = row[0]
+                label = 0 
                 guid = "%s-%s" % (set_type, idx)
                 text_a = body.replace('\\n', ' ').replace('\\', ' ')
 

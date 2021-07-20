@@ -24,7 +24,7 @@ import torch
 from sklearn.metrics import f1_score
 from transformers.data.metrics import simple_accuracy
 
-import log 
+import log
 from pet.utils import InputExample, exact_match, save_logits, save_predictions, softmax, LogitsList, set_seed, eq_div
 from pet.wrapper import TransformerModelWrapper, SEQUENCE_CLASSIFIER_WRAPPER, WrapperConfig
 
@@ -41,11 +41,6 @@ class PetConfig(ABC):
         """Save this config to a file."""
         with open(path, 'w', encoding='utf8') as fh:
             json.dump(self.__dict__, fh)
-    def new_model(self):
-        try:
-            PetConfig
-        except ValueError:
-            print("Invalid Model config") 
 
     @classmethod
     def load(cls, path: str):
@@ -66,7 +61,6 @@ class TrainConfig(PetConfig):
                  alpha: float = 0.9999, temperature: float = 1):
         """
         Create a new training config.
-
         :param device: the device to use ('cpu' or 'gpu')
         :param per_gpu_train_batch_size: the number of labeled training examples per batch and gpu
         :param per_gpu_unlabeled_batch_size: the number of unlabeled examples per batch and gpu
@@ -109,7 +103,6 @@ class EvalConfig(PetConfig):
                  metrics: List[str] = None, decoding_strategy: str = 'default', priming: bool = False):
         """
         Create a new evaluation config.
-
         :param device: the device to use ('cpu' or 'gpu')
         :param n_gpu: the number of gpus to use
         :param per_gpu_eval_batch_size: the number of evaluation examples per batch and gpu
@@ -132,7 +125,6 @@ class IPetConfig(PetConfig):
                  n_most_likely: int = -1):
         """
         Create a new iPET config.
-
         :param generations: the number of generations to train
         :param logits_percentage: the percentage of models to use for annotating training sets for the next generation
         :param scale_factor: the factor by which the training set is increased for each generation
@@ -145,10 +137,10 @@ class IPetConfig(PetConfig):
         self.n_most_likely = n_most_likely
 
 
-def init_model(config: WrapperConfig, subj, verb) -> TransformerModelWrapper:
+def init_model(config: WrapperConfig) -> TransformerModelWrapper:
     """Initialize a new model from the given config."""
     assert config.pattern_id is not None, 'A pattern_id must be set for initializing a new PET model'
-    model = TransformerModelWrapper(config, subj, verb)
+    model = TransformerModelWrapper(config)
     return model
 
 
@@ -160,7 +152,6 @@ def train_ipet(ensemble_model_config: WrapperConfig, ensemble_train_config: Trai
                eval_data: List[InputExample] = None, do_train: bool = True, do_eval: bool = True, seed: int = 42):
     """
     Train and evaluate a new iPET model for a given task.
-
     :param ensemble_model_config: the model configuration for each model corresponding to an individual PVP
     :param ensemble_train_config: the training configuration for each model corresponding to an individual PVP
     :param ensemble_eval_config: the evaluation configuration for each model corresponding to an individual PVP
@@ -218,7 +209,7 @@ def train_ipet(ensemble_model_config: WrapperConfig, ensemble_train_config: Trai
                      eval_data=eval_data, do_train=do_train, do_eval=do_eval)
 
 
-def  train_pet(subj, verb, ensemble_model_config: WrapperConfig, ensemble_train_config: TrainConfig,
+def train_pet(ensemble_model_config: WrapperConfig, ensemble_train_config: TrainConfig,
               ensemble_eval_config: EvalConfig, final_model_config: WrapperConfig, final_train_config: TrainConfig,
               final_eval_config: EvalConfig, pattern_ids: List[int], output_dir: str, ensemble_repetitions: int = 3,
               final_repetitions: int = 1, reduction: str = 'wmean', train_data: List[InputExample] = None,
@@ -226,7 +217,6 @@ def  train_pet(subj, verb, ensemble_model_config: WrapperConfig, ensemble_train_
               do_eval: bool = True, no_distillation: bool = False, seed: int = 42):
     """
     Train and evaluate a new PET model for a given task.
-
     :param ensemble_model_config: the model configuration for each model corresponding to an individual PVP
     :param ensemble_train_config: the training configuration for each model corresponding to an individual PVP
     :param ensemble_eval_config: the evaluation configuration for each model corresponding to an individual PVP
@@ -248,7 +238,7 @@ def  train_pet(subj, verb, ensemble_model_config: WrapperConfig, ensemble_train_
     """
 
     # Step 1: Train an ensemble of models corresponding to individual patterns
-    train_pet_ensemble(subj, verb, ensemble_model_config, ensemble_train_config, ensemble_eval_config, pattern_ids, output_dir,
+    train_pet_ensemble(ensemble_model_config, ensemble_train_config, ensemble_eval_config, pattern_ids, output_dir,
                        repetitions=ensemble_repetitions, train_data=train_data, unlabeled_data=unlabeled_data,
                        eval_data=eval_data, do_train=do_train, do_eval=do_eval,
                        save_unlabeled_logits=not no_distillation, seed=seed)
@@ -269,18 +259,17 @@ def  train_pet(subj, verb, ensemble_model_config: WrapperConfig, ensemble_train_
     final_model_config.wrapper_type = SEQUENCE_CLASSIFIER_WRAPPER
     final_train_config.use_logits = True
 
-    train_classifier(subj, verb, final_model_config, final_train_config, final_eval_config, os.path.join(output_dir, 'final'),
+    train_classifier(final_model_config, final_train_config, final_eval_config, os.path.join(output_dir, 'final'),
                      repetitions=final_repetitions, train_data=train_data, unlabeled_data=unlabeled_data,
                      eval_data=eval_data, do_train=do_train, do_eval=do_eval, seed=seed)
 
 
-def train_classifier(subj, verb, model_config: WrapperConfig, train_config: TrainConfig, eval_config: EvalConfig, output_dir: str,
+def train_classifier(model_config: WrapperConfig, train_config: TrainConfig, eval_config: EvalConfig, output_dir: str,
                      repetitions: int = 3, train_data: List[InputExample] = None,
                      unlabeled_data: List[InputExample] = None, eval_data: List[InputExample] = None,
                      do_train: bool = True, do_eval: bool = True, seed: int = 42):
     """
     Train and evaluate a sequence classification model.
-
     :param model_config: the model configuration to use
     :param train_config: the training configuration to use
     :param eval_config: the evaluation configuration to use
@@ -294,20 +283,19 @@ def train_classifier(subj, verb, model_config: WrapperConfig, train_config: Trai
     :param seed: the random seed to use
     """
 
-    train_pet_ensemble(subj = subj, verb = verb, model_config = model_config, train_config = train_config, eval_config = eval_config, pattern_ids=[0], output_dir=output_dir,
+    train_pet_ensemble(model_config, train_config, eval_config, pattern_ids=[0], output_dir=output_dir,
                        repetitions=repetitions,
                        train_data=train_data, unlabeled_data=unlabeled_data, eval_data=eval_data, do_train=do_train,
                        do_eval=do_eval, seed=seed)
 
 
-def train_pet_ensemble(subj, verb, model_config: WrapperConfig, train_config: TrainConfig, eval_config: EvalConfig,
+def train_pet_ensemble(model_config: WrapperConfig, train_config: TrainConfig, eval_config: EvalConfig,
                        pattern_ids: List[int], output_dir: str, ipet_data_dir: str = None, repetitions: int = 3,
                        train_data: List[InputExample] = None, unlabeled_data: List[InputExample] = None,
                        eval_data: List[InputExample] = None, do_train: bool = True, do_eval: bool = True,
                        save_unlabeled_logits: bool = False, seed: int = 42):
     """
     Train and evaluate an ensemble of PET models without knowledge distillation.
-
     :param model_config: the model configuration to use
     :param train_config: the training configuration to use
     :param eval_config: the evaluation configuration to use
@@ -343,7 +331,7 @@ def train_pet_ensemble(subj, verb, model_config: WrapperConfig, train_config: Tr
             if not os.path.exists(pattern_iter_output_dir):
                 os.makedirs(pattern_iter_output_dir)
 
-            wrapper = init_model(model_config, subj, verb)
+            wrapper = init_model(model_config)
 
             # Training
             if do_train:
@@ -355,7 +343,7 @@ def train_pet_ensemble(subj, verb, model_config: WrapperConfig, train_config: Tr
                 else:
                     ipet_train_data = None
 
-                results_dict.update(train_single_model(subj, verb, wrapper, train_data, train_config, eval_config,
+                results_dict.update(train_single_model(wrapper, train_data, train_config, eval_config,
                                                        ipet_train_data=ipet_train_data,
                                                        unlabeled_data=unlabeled_data))
 
@@ -381,7 +369,7 @@ def train_pet_ensemble(subj, verb, model_config: WrapperConfig, train_config: Tr
             if do_eval:
                 logger.info("Starting evaluation...")
                 if not wrapper:
-                    wrapper = TransformerModelWrapper.from_pretrained(subj, verb, pattern_iter_output_dir)
+                    wrapper = TransformerModelWrapper.from_pretrained(pattern_iter_output_dir)
 
                 eval_result = evaluate(wrapper, eval_data, eval_config, priming_data=train_data)
 
@@ -410,12 +398,11 @@ def train_pet_ensemble(subj, verb, model_config: WrapperConfig, train_config: Tr
         logger.info("=== ENSEMBLE TRAINING COMPLETE ===")
 
 
-def train_single_model(subj, verb, model: TransformerModelWrapper, train_data: List[InputExample], config: TrainConfig,
+def train_single_model(model: TransformerModelWrapper, train_data: List[InputExample], config: TrainConfig,
                        eval_config: EvalConfig = None, ipet_train_data: List[InputExample] = None,
                        unlabeled_data: List[InputExample] = None, return_train_set_results: bool = True):
     """
     Train a single model.
-
     :param model: the model to train
     :param train_data: the training examples to use
     :param config: the training config
@@ -427,9 +414,7 @@ def train_single_model(subj, verb, model: TransformerModelWrapper, train_data: L
     :return: a dictionary containing the global step, average loss and (optionally) results on the train set
     """
 
-    # device = torch.device(config.device if config.device else "cuda:0")#if torch.cuda.is_available() else "cpu")
-    device = torch.device("cuda:0")#if torch.cuda.is_available() else "cpu")
-    
+    device = torch.device(config.device if config.device else "cuda" if torch.cuda.is_available() else "cpu")
     if not ipet_train_data:
         ipet_train_data = []
 
@@ -445,7 +430,7 @@ def train_single_model(subj, verb, model: TransformerModelWrapper, train_data: L
     if not all_train_data and not config.use_logits:
         logger.warning('Training method was called without training examples')
     else:
-        global_step, tr_loss = model.train( subj, verb,
+        global_step, tr_loss = model.train(
             all_train_data, device,
             per_gpu_train_batch_size=config.per_gpu_train_batch_size,
             per_gpu_unlabeled_batch_size=config.per_gpu_unlabeled_batch_size,
@@ -477,7 +462,6 @@ def evaluate(model: TransformerModelWrapper, eval_data: List[InputExample], conf
              priming_data: List[InputExample] = None) -> Dict:
     """
     Evaluate a model.
-
     :param model: the model to evaluate
     :param eval_data: the examples for evaluation
     :param config: the evaluation config
@@ -490,8 +474,8 @@ def evaluate(model: TransformerModelWrapper, eval_data: List[InputExample], conf
             example.meta['priming_data'] = priming_data
 
     metrics = config.metrics if config.metrics else ['acc']
-    # device = torch.device(config.device if config.device else "cuda:0") #if torch.cuda.is_available() else "cpu")
-    device = torch.device("cuda:0")
+    device = torch.device(config.device if config.device else "cuda" if torch.cuda.is_available() else "cpu")
+
     model.model.to(device)
     results = model.eval(eval_data, device, per_gpu_eval_batch_size=config.per_gpu_eval_batch_size,
                          n_gpu=config.n_gpu, decoding_strategy=config.decoding_strategy, priming=config.priming)
@@ -538,7 +522,6 @@ def _write_results(path: str, results: Dict):
 def merge_logits(logits_dir: str, output_file: str, reduction: str):
     """
     Merge the logits predicted for unlabeled examples by multiple models.
-
     :param logits_dir: a directory for which each sub-directory corresponds to a pretrained model and contains
            both a file ``results.txt`` containing that model's results on the training set and a file ``logits.txt``
            containing that model's predictions for the unlabeled data.
@@ -586,7 +569,6 @@ def merge_logits(logits_dir: str, output_file: str, reduction: str):
 def merge_logits_lists(logits_lists: List[LogitsList], reduction: str = 'mean') -> LogitsList:
     """
     Merge a list of :class:`LogitsList` objects.
-
     :param logits_lists: the lists to merge
     :param reduction: the strategy for merging logits, either 'mean' or 'wmean'. For 'mean', all models contribute
            equally, for 'wmean', each model's contribution is proportional to its accuracy on the training set before
@@ -613,7 +595,6 @@ def generate_ipet_train_sets(train_data: List[InputExample], unlabeled_data: Lis
                              logits_percentage: float, n_most_likely: int = -1, seed: int = 42):
     """
     Generate training sets for the next generation of iPET models.
-
     :param train_data: the training examples
     :param unlabeled_data: the unlabeled examples
     :param labels: the list of all possible labels
@@ -698,7 +679,6 @@ def generate_ipet_train_set(logits_lists: List[LogitsList], labels: List[str], o
                             n_most_likely: int = -1, rng=None, rng_np=None) -> List[InputExample]:
     """
     Generate a single training set for the next generation of iPET models.
-
     :param logits_lists: predictions from the previous generation of models
     :param labels: all task labels
     :param original_data: the original training data corresponding to the logits_lists
