@@ -29,7 +29,6 @@ def create_unlabeled_dataset(file, df):
         for sentence in obj['sentences']:
             if sentence not in df.text.astype(str).values.tolist() and count <= 15:
                 dataset = dataset.append({'label' : '', 'text': sentence.replace(',', ' ')},ignore_index=True)
-                count+=1
             else:
                 print("patesti")
             if count == 15:
@@ -40,7 +39,7 @@ def create_unlabeled_dataset(file, df):
 if __name__ == "__main__":
     df = pd.read_csv("preprocessing_new_tags/annotations_news_orig.csv")
 
-    df_ma  = create_dataset(group(df, 'M&A'))
+    df_ma  = create_dataset(group(df, 'ma'))
     df_financials = create_dataset(group(df, 'financials'))
     df_partnership  = create_dataset(group(df, 'partnership'))
     df_funding  = create_dataset(group(df ,"funding"))
