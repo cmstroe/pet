@@ -826,7 +826,7 @@ class BusinessStatusClassificationProcessor(DataProcessor):
 
     def get_labels(self) -> List[str]:
         """This method returns all possible labels for the task."""
-        return MarketClassificationDataProcessor.LABELS
+        return BusinessStatusClassificationProcessor.LABELS
 
     def _create_examples(self, path: str, set_type: str) -> List[InputExample]:
         examples = []
