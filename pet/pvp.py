@@ -754,6 +754,36 @@ class   MAPVP(PVP):
         return CausesPVP.VERBALIZER[label]
 
 
+class   FinancialsPVP(PVP):
+    VERBALIZER = {
+        "0": ["No"],
+        "1": ["Yes"]
+    }
+
+    def get_parts(self, example: InputExample) -> FilledPattern:
+        text = self.shortenable(example.text_a)
+
+        if self.pattern_id == 0:
+            return [text, 'Does this talk about the financials of the company?', self.mask], []
+        elif self.pattern_id == 1:
+            return [text, 'Does it talk about the growth of the company?', self.mask], []
+        elif self.pattern_id == 2:
+            return [text, 'Does it talk about revenue or other performance of the company?', self.mask], []
+        elif self.pattern_id == 3:
+            return [text, ' Does it talk about revenue or other financials of the company?', self.mask], []
+        elif self.pattern_id == 4:
+            return [text, 'Does it talk about the earnings of the company?', self.mask], []
+        elif self.pattern_id == 5:
+            return [text, 'Does it talk about the expenses of the company?', self.mask], []
+                
+        else:
+            raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
+
+    def verbalize(self, label) -> List[str]:
+        return FinancialsPVP.VERBALIZER[label]
+
+
+
 PVPS = {
     'agnews': AgnewsPVP,
     'mnli': MnliPVP,
@@ -777,5 +807,6 @@ PVPS = {
     'causes' : CausesPVP,
     'partner' : PartnerPVP,
     'funding' : FundingPVP,
-    'ma' : MAPVP
+    'ma' : MAPVP,
+    'financials' : FinancialsPVP
 }
