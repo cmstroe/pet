@@ -782,6 +782,28 @@ class   FinancialsPVP(PVP):
     def verbalize(self, label) -> List[str]:
         return FinancialsPVP.VERBALIZER[label]
 
+class  TrendsPVP(PVP):
+    VERBALIZER = {
+        "0": ["No"],
+        "1": ["Yes"]
+    }
+
+    def get_parts(self, example: InputExample) -> FilledPattern:
+        text = self.shortenable(example.text_a)
+
+        if self.pattern_id == 0:
+            return [text, 'Does the previous text talk about a trend?', self.mask], []
+        elif self.pattern_id == 1:
+            return [text, 'Does the previous text highlight a change?', self.mask], []
+        elif self.pattern_id == 2:
+            return [text, 'Does the previous text describe a change in the market?', self.mask], []
+        else:
+            raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
+
+    def verbalize(self, label) -> List[str]:
+        return TrendsPVP.VERBALIZER[label]
+
+
 
 
 PVPS = {
@@ -808,5 +830,6 @@ PVPS = {
     'partner' : PartnerPVP,
     'funding' : FundingPVP,
     'ma' : MAPVP,
-    'financials' : FinancialsPVP
+    'financials' : FinancialsPVP,
+    'trends' : TrendsPVP
 }
