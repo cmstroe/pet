@@ -23,7 +23,7 @@ small_eval_dataset = tokenized_datasets['test']
 # small_train_dataset['label'] = [int(i) for i in train_list]
 # small_eval_dataset['label'] = [int(i) for i in test_list]
 
-model = AutoModelForSequenceClassification.from_pretrained("bert-base-cased")
+model = AutoModelForSequenceClassification.from_pretrained("roberta-large")
 
 training_args = TrainingArguments("test_trainer", per_device_train_batch_size = 2)
 
