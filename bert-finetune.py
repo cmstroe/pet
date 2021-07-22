@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 
 
-raw_datasets = load_dataset('csv', data_files='datasets/train_funding.csv')['train'].train_test_split(test_size=0.2)
+raw_datasets = load_dataset('csv', data_files='datasets/train_funding.csv')['train'].train_test_split(test_size=0.8)
 
-tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
+tokenizer = AutoTokenizer.from_pretrained("roberta-large")
 
 def tokenize_function(examples):
     return tokenizer(examples['text'], padding="max_length", truncation=True)
