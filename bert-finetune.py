@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 
-raw_datasets = load_dataset('csv', data_files='datasets/train_funding.csv')['train'].train_test_split(test_size=0.8)
+raw_datasets = load_dataset('csv', data_files='datasets/ma_train.csv')['train'].train_test_split(test_size=0.8)
 
 tokenizer = AutoTokenizer.from_pretrained("roberta-large")
 
